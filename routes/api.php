@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,23 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
+//
+//Route::get('/test', function (Request $request) {
+//    return "welcome";
+//});
+
+Route::group([
+    'prefix' => 'v1/auth'
+], function () {
+    Route::post('signup', 'AuthController@signup');
+    Route::middleware('token.need')->post('login', 'ApiTokenController@issueToken');
+
+    Route::group([
+        'middleware' => 'auth:api'
+    ], function() {
+        Route::get('user', 'AuthController@user');
+    });
 });
