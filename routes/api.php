@@ -29,7 +29,7 @@ Route::group([
     Route::middleware('token.need')->post('login', 'ApiTokenController@issueToken');
 
     Route::group([
-        'middleware' => 'auth:api'
+        'middleware' => ['auth:api','identify']
     ], function() {
         Route::get('user', 'AuthController@user');
     });

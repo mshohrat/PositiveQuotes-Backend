@@ -13,12 +13,14 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'password' => 'required|string'
+            'password' => 'required|string',
+            'uuid' => 'required|string'
         ]);
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'identifier' => $request->uuid
         ]);
         $user->save();
         return response()->json([
@@ -28,6 +30,6 @@ class AuthController extends Controller
 
     public function user(Request $request)
     {
-        return response()->json($request->user()->only(['name','email',]));
+        return response()->json($request->user());
     }
 }
