@@ -51,7 +51,9 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
+        'check.user.role' => \App\Http\Middleware\CheckUserRole::class,
         'token.need' => \App\Http\Middleware\ApiTokenRequirements::class,
+        'is.guest' => \App\Http\Middleware\GuestUserEnter::class,
         'identify' => \App\Http\Middleware\UserIndentify::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,

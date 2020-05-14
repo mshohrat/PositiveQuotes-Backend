@@ -27,10 +27,14 @@ Route::group([
 ], function () {
     Route::post('signup', 'AuthController@signup');
     Route::middleware('token.need')->post('login', 'ApiTokenController@issueToken');
+    Route::middleware('is.guest')->post('login-as-guest', 'ApiTokenController@issueToken');
 
     Route::group([
-        'middleware' => ['auth:api','identify']
+        'middleware' => ['auth:api']
     ], function() {
-        Route::get('user', 'AuthController@user');
+        Route::middleware('identify')->get('user', 'AuthController@user');
+        Route::middleware('check.user.role:'.\App\Role\UserRole::ROLE_ADMIN)->get('role', function(){
+            return "success";
+        });
     });
 });

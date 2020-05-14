@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Role\UserRole;
 use App\User;
 use Closure;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +27,7 @@ class UserIndentify
             return  response()->json(['message' => 'User is not authenticated!'], 401);
         }
         $uuid = $request->header('uuid');
-        $user = User::where('id',$request->user()->id)->first();
+        $user = $request->user();
         if($user->identifier != $uuid)
         {
             return  response()->json(['message' => 'User is not authenticated!'], 401);

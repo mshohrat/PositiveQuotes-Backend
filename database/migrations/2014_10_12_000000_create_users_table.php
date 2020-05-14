@@ -21,6 +21,9 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('firebase_id')->unique()->nullable()->default(null);
             $table->string('identifier')->unique()->default(0000);
+            $table->boolean('is_guest')->default(true);
+            $table->text('roles')->nullable();
+            $table->text('likes')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
