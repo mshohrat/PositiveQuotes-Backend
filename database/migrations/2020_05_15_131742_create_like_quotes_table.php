@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserSettingsTable extends Migration
+class CreateLikeQuotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateUserSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_settings', function (Blueprint $table) {
+        Schema::create('like_quotes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('interval')->default(\App\UserSetting::INTERVAL_12_HOURS);
             $table->bigInteger('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('profiles');
+            $table->bigInteger('quote_id')->unsigned();
+            $table->foreign('quote_id')->references('id')->on('quotes');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateUserSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_settings');
+        Schema::dropIfExists('like_quotes');
     }
 }

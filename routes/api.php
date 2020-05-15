@@ -25,14 +25,22 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'prefix' => 'v1/auth'
 ], function () {
-    Route::post('signup', 'AuthController@signup');
+    Route::post('signup', 'UserController@signup');
     Route::middleware('token.need')->post('login', 'ApiTokenController@issueToken');
     Route::middleware('is.guest')->post('login-as-guest', 'ApiTokenController@issueToken');
 
     Route::group([
         'middleware' => ['auth:api']
     ], function() {
-        Route::middleware('identify')->get('user', 'AuthController@user');
+        Route::group([
+            'middleware' => ['identify']
+        ], function() {
+            Route::get('user', 'UserController@user');
+
+            Route::get('profile', 'ProfileController@get');
+            Route::put('profile', 'ProfileController@edit');
+        });
+
         Route::middleware('check.user.role:'.\App\Role\UserRole::ROLE_ADMIN)->get('role', function(){
             return "success";
         });

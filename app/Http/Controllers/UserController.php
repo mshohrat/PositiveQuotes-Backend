@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Profile;
 use App\Role\UserRole;
 use App\User;
+use App\UserSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\Client;
 use Laravel\Passport\Token;
 use Lcobucci\JWT\Parser;
 
-class AuthController extends Controller
+class UserController extends Controller
 {
     public function signup(Request $request)
     {
@@ -28,23 +30,29 @@ class AuthController extends Controller
             'is_guest' => false,
         ]);
         $user->setRoles([UserRole::ROLE_CUSTOMER]);
-//        $client = $this->getClient($request);
-//        if($client->passwordClient == true)
-//        {
-//            $user->setRoles([UserRole::ROLE_CUSTOMER]);
-//        }
-//        else if ($client->personalAccessClient)
-//        {
-//            $user->setRoles([UserRole::ROLE_ADMIN]);
-//        }
-//        else
-//        {
-//            return  response()->json(['message' => 'action is not allowed for this client!'], 405);
-//        }
         $user->save();
+        $this->createProfileAndSetting($user->email);
         return response()->json([
             'message' => 'Successfully created user!'
         ], 201);
+    }
+
+    private function createProfileAndSetting(string $email)
+    {
+        $user = User::where('email', $email)->first();
+        if ($user != null) {
+            $setting = new UserSetting([
+                'user_id' => $user->id
+            ]);
+            $setting->save();
+
+            $profile = new Profile([
+                'name' => $user->name,
+                'email' => $user->email,
+                'user_id' => $user->id,
+            ]);
+            $profile->save();
+        }
     }
 
     public function user(Request $request)

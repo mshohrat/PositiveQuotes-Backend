@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserSettingsTable extends Migration
+class CreateProfilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreateUserSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_settings', function (Blueprint $table) {
+        Schema::create('profiles', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('interval')->default(\App\UserSetting::INTERVAL_12_HOURS);
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
+            $table->string('name');
+            $table->string('email');
+            $table->foreign('email')->references('email')->on('users');
+            $table->integer('gender')->default(\App\Profile::GENDER_UNKNOWN);
             $table->timestamps();
         });
     }
@@ -29,6 +32,6 @@ class CreateUserSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_settings');
+        Schema::dropIfExists('profiles');
     }
 }
