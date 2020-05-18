@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Role\RoleChecker;
 use Closure;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class CheckUserRole
@@ -31,7 +32,15 @@ class CheckUserRole
         $user = $request->user();
 
         if ( ! $this->roleChecker->check($user, $role)) {
-            return  response()->json(['message' => 'action is not allowed for this user!'], 405);
+            if($request -> expectsJson())
+            {
+                return  response()->json(['message' => 'action is not allowed for this user!'], 405);
+            }
+            else
+            {
+                Auth::logout();
+                return redirect() -> route('login') -> withErrors(['authorize'=>'action is not allowed for this user!']);
+            }
         }
 
         return $next($request);

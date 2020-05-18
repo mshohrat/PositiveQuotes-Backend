@@ -21,4 +21,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::group([
+    'middleware' => ['auth','check.user.role:'.\App\Role\UserRole::ROLE_ADMIN]
+], function() {
+    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/profile', 'ProfileController@get');
+    Route::get('/profile/{id}', 'ProfileController@getById');
+});

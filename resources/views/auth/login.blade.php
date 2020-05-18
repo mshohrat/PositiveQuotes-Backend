@@ -4,6 +4,11 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            @error('authorize')
+            <div class="alert alert-danger" role="alert">
+                    {!! implode('', $errors->all('<div>:message</div>')) !!}
+            </div>
+            @enderror
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>
 

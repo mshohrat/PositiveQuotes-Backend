@@ -85,13 +85,23 @@ class User extends Authenticatable
         return $roles;
     }
 
+    public function isGuest() : bool
+    {
+        return $this->is_guest == 1;
+    }
+
+    public function isActive() : bool
+    {
+        return $this->is_active == 1;
+    }
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','firebase_id','identifier','is_guest'
+        'name', 'email', 'password','firebase_id','identifier','is_guest','is_active'
     ];
 
     /**
@@ -113,5 +123,6 @@ class User extends Authenticatable
         'roles' => 'array',
         'likes' => 'array',
         'is_guest' => 'boolean',
+        'is_active' => 'boolean',
     ];
 }

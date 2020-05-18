@@ -7,6 +7,7 @@ use App\Role\UserRole;
 use App\User;
 use App\UserSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\Client;
 use Laravel\Passport\Token;
@@ -65,5 +66,13 @@ class UserController extends Controller
         $tokenId = (new Parser())->parse($bearerToken)->getClaim('jti');
         $client = Token::find($tokenId)->client;
         return $client;
+    }
+
+    public function logout(Request $request)
+    {
+        if(!$request -> expectsJson()) {
+            Auth::logout();
+            return view('auth.login');
+        }
     }
 }
