@@ -2,68 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Profile;
-use Illuminate\Http\Request;
+use Gate;
+use App\User;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\ProfileRequest;
+use App\Http\Requests\PasswordRequest;
 
 class ProfileController extends Controller
 {
-    //
-    public function get(Request $request)
+    /**
+     * Show the form for editing the profile.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function edit()
     {
-        $profile = Profile::where('user_id',$request->user()->id)->first();
-        if($request->expectsJson()) {
-            if ($profile != null) {
-                return response()->json($profile, 200);
-            }
-            return response()->json(['message' => 'Profile not found!'], 404);
-        }
-        else
-        {
-            return view('profile',['profile'=>$profile]);
-        }
+        return view('profile.edit');
     }
 
-    public function getById(Request $request)
+    /**
+     * Update the profile
+     *
+     * @param  \App\Http\Requests\ProfileRequest  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(ProfileRequest $request)
     {
-        $profile = null;
-        $id = $request->route('id');
-        if($id != null)
-        {
-            $profile = Profile::where('user_id',$id)->first();
-        }
-        if($request->expectsJson()) {
-            if($id == null)
-            {
-                return response()->json(['message' => 'user id is required!'], 400);
-            }
-            if ($profile != null) {
-                return response()->json($profile, 200);
-            }
-            return response()->json(['message' => 'Profile not found!'], 404);
-        }
-        else
-        {
-            return view('profile',['profile'=>$profile]);
-        }
+        auth()->user()->update($request->all());
+
+        return back()->withStatus(__('Profile successfully updated.'));
     }
 
-    public function edit(Request $request)
+    /**
+     * Change the password
+     *
+     * @param  \App\Http\Requests\PasswordRequest  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function password(PasswordRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'gender' => 'nullable|integer',
-        ]);
-        $profile = Profile::where('user_id',$request->user()->id)->first();
-        if($profile != null)
-        {
-            $profile->name = $request->name;
-            if($request->has('gender'))
-            {
-                $profile->gender = $request->gender;
-            }
-            $profile->save();
-            return response()->json($profile, 200);
-        }
-        return response()->json(['message' => 'Profile not found!'], 404);
+        auth()->user()->update(['password' => Hash::make($request->get('password'))]);
+
+        return back()->withPasswordStatus(__('Password successfully updated.'));
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Profile;
 use App\User;
+use App\UserSetting;
 use Closure;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -37,10 +39,29 @@ class GuestUserEnter
             'is_guest' => true
         ]);
         $user->save();
+        $this->createProfileAndSetting($user->email);
         $request['grant_type'] = 'password';
         $request['username'] = $user->email;
         $request['password'] = $password;
         $request->headers->add(['uuid'=> $request->uuid]);
         return $next($request);
+    }
+
+    private function createProfileAndSetting(string $email)
+    {
+        $user = User::where('email', $email)->first();
+        if ($user != null) {
+            $setting = new UserSetting([
+                'user_id' => $user->id
+            ]);
+            $setting->save();
+
+            $profile = new Profile([
+                'name' => $user->name,
+                'email' => $user->email,
+                'user_id' => $user->id,
+            ]);
+            $profile->save();
+        }
     }
 }

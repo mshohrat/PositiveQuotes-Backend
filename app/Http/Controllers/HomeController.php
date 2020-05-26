@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Quote;
-use App\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -15,7 +13,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
     }
 
     /**
@@ -25,8 +23,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        $quotes = Quote::all();
-        return view('home',['users'=>$users, 'quotes'=> $quotes ]);
+        return view('home');
     }
 }

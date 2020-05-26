@@ -2,133 +2,106 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\QuoteRequest;
 use App\Quote;
 use Illuminate\Http\Request;
 
 class QuoteController extends Controller
 {
-    public function createQuote(Request $request)
+    public function quotes()
     {
-        $request->validate([
-            'text' => 'required|string',
-            'author' => 'nullable|string'
-        ]);
-        $quote = new Quote([
-            'text' => $request->text,
-            'author' => $request->author,
-            'active' => false,
-        ]);
-        $quote->save();
-        return response()->json($quote, 201);
+        return view('quotes.index', ['quotes' => Quote::paginate(15),'listName' => 'All Quotes' ]);
     }
 
-    public function createQuoteByAdmin(Request $request)
+    public function verified_quotes()
     {
-        $request->validate([
-            'text' => 'required|string',
-            'author' => 'nullable|string'
-        ]);
-        $quote = new Quote([
-            'text' => $request->text,
-            'author' => $request->author,
-            'active' => true,
-        ]);
-        $quote->save();
-        return response()->json($quote, 201);
+        return view('quotes.index', ['quotes' => Quote::where('active',1)->paginate(15),'listName' => 'Verified Quotes' ]);
     }
 
-    public function editQuoteByAdmin(Request $request)
+    public function pending_quotes()
     {
-        $request->validate([
-            'text' => 'required|string',
-            'author' => 'nullable|string',
-            'active' => 'nullable|boolean'
+        return view('quotes.index', ['quotes' => Quote::where('active',0)->paginate(15),'listName' => 'Pending Quotes' ]);
+    }
+
+    public function store(QuoteRequest $request)
+    {
+        $qoute = new Quote([
+            'text' => $request->get('text'),
+            'author' => $request->get('author'),
+            'active' => $request->has('active') ? 1 : 0,
         ]);
-        $quote = Quote::where('id',$request->route('id'))->first();
-        if($quote != null)
+        $qoute->save();
+
+        return redirect()->route('quote.quotes')->withStatus(__('Quote successfully created.'));
+    }
+
+    public function update(QuoteRequest $request, Quote $quote)
+    {
+        $quote->update([
+            'text' => $request->get('text'),
+            'author' => $request->get('author'),
+            'active' => $request->get('active') ? 1 : 0,
+        ]);
+        return redirect()->route('quote.quotes')->withStatus(__('Quote successfully updated.'));
+    }
+
+    public function edit(Quote $quote)
+    {
+        return view('quotes.edit', compact('quote'));
+    }
+
+    public function destroy(Quote  $quote)
+    {
+        $quote->delete();
+        return redirect()->route('quote.quotes')->withStatus(__('Quote successfully deleted.'));
+    }
+
+    public function search(Request $request)
+    {
+        $quotes = null;
+
+        $activeStatus = null;
+        $listName = 'All Quotes';
+        if($request->get('is_active'))
         {
-            $quote->text = $request->text;
-            $quote->author = $request->author;
-            $quote->active = $request->active;
-            $quote->save();
-            return response()->json(['message' => 'Successfully updated Quote!'], 200);
+            switch ($request->get('is_active'))
+            {
+                case '1':
+                    $activeStatus = "1";
+                    $listName = 'Verified Quotes';
+                    break;
+                case '-1':
+                    $activeStatus = "0";
+                    $listName = 'Pending Quotes';
+                    break;
+            }
         }
-        return response()->json([
-            'message' => 'Quote not found!'
-        ], 404);
-    }
-
-    public function deleteQuote(Request $request)
-    {
-//        $quote = Quote::where('id',$request->route('id'))->first();
-//        if($quote != null)
-//        {
-//            $quote->text = $request->text;
-//            $quote->author = $request->author;
-//            $quote->active = $request->active;
-//            $quote->save();
-//            return response()->json(['message' => 'Successfully updated Quote!'], 200);
-//        }
-//        return response()->json(['message' => 'Quote not found!'], 404);
-    }
-
-    public function deleteQuoteByAdmin(Request $request)
-    {
-        $quote = Quote::where('id',$request->route('id'))->first();
-        if($quote != null)
+        $phrase = $request->get('phrase') == null ? "" : $request->get('phrase');
+        if($activeStatus == null)
         {
-            $quote->delete();
-            return response()->json(['message' => 'Successfully Deleted Quote!'], 200);
+
+            $quotes = Quote::where($request->get('search_by') == null ? 'text' : $request->get('search_by'),'LIKE','%'.$phrase.'%')->paginate(15);
         }
-        return response()->json(['message' => 'Quote not found!'], 404);
-    }
-
-    public function activateQuoteByAdminInDB(string $id,string $active) : bool
-    {
-        $quote = Quote::where('id',$id)->first();
-        if($quote != null)
+        else
         {
-            $quote->active = $active == "1";
-            $quote->save();
-            return true;
-        }
-        return false;
-    }
-
-    public function makeQuoteActiveByAdmin(Request $request)
-    {
-        if($this->activateQuoteByAdminInDB($request->route('id'),$request->route('active')))
-        {
-            return response()->json(['message' => 'Successfully Updated Quote!'], 200);
-        }
-        return response()->json(['message' => 'Quote not found!'], 404);
-    }
-
-    public function makeQuotesActiveByAdmin(Request $request)
-    {
-        $request->validate([
-            'quotes' => 'nullable|array',
-        ]);
-        $done = false;
-        foreach ($request->quotes as $key => $value)
-        {
-            $done = $this->activateQuoteByAdminInDB($key,$value);
+            $quotes = Quote::where('active',$activeStatus)->where($request->get('search_by') == null ? 'text' : $request->get('search_by'),'LIKE','%'.$phrase.'%')->paginate(15);
         }
 
-        if($done)
+        return view('quotes.index', ['quotes' => $quotes, 'listName' => $listName]);
+    }
+
+    public function last_all_quotes(Request $request)
+    {
+        $resultRecords = array();
+        $resultTimes = array();
+        $time = today()->subDays(13);
+        for ($i=0;$i<15;$i++)
         {
-            return response()->json(['message' => 'Successfully Updated Quotes!'], 200);
+            $records = Quote::whereDate('created_at','<=', $time )->get();
+            $resultRecords[] = $records->count();
+            $resultTimes[] = $time->format('M d');
+            $time->addDay();
         }
-        return response()->json(['message' => 'Quote not found!'], 404);
-    }
-
-    public function getQuote()
-    {
-
-    }
-
-    public function getQuotesByAdmin()
-    {
-
+        return response()->json(['records'=>$resultRecords, 'times' => $resultTimes],200);
     }
 }
