@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Utils\ResponseUtil;
 use App\User;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Psr\Http\Message\ServerRequestInterface;
@@ -26,7 +27,8 @@ class ApiTokenController extends AccessTokenController
                 $data = json_decode($response->getContent(),true);
                 $data['is_guest'] = $user->is_guest;
                 $data['name'] = $user->name;
-                return response()->json($data,200);
+                $data['email'] = $user->email;
+                return ResponseUtil::handleResponse($data,ResponseUtil::SUCCESS);
             }
         }
         return $response;

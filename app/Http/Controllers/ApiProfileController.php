@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Utils\ResponseUtil;
 use App\Profile;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,9 @@ class ApiProfileController extends Controller
         $profile = Profile::where('user_id',$request->user()->id)->first();
         if($request->expectsJson()) {
             if ($profile != null) {
-                return response()->json($profile, 200);
+                return ResponseUtil::handleResponse($profile,ResponseUtil::SUCCESS);
             }
-            return response()->json(['message' => 'Profile not found!'], 404);
+            return ResponseUtil::handleErrorResponse('Profile not found!',ResponseUtil::NOT_FOUND);
         }
         else
         {
@@ -33,12 +34,12 @@ class ApiProfileController extends Controller
         if($request->expectsJson()) {
             if($id == null)
             {
-                return response()->json(['message' => 'user id is required!'], 400);
+                return ResponseUtil::handleErrorResponse('User ID is required!',ResponseUtil::BAD_REQUEST);
             }
             if ($profile != null) {
-                return response()->json($profile, 200);
+                return ResponseUtil::handleResponse($profile,ResponseUtil::SUCCESS);
             }
-            return response()->json(['message' => 'Profile not found!'], 404);
+            return ResponseUtil::handleErrorResponse('Profile not found!',ResponseUtil::NOT_FOUND);
         }
         else
         {
@@ -61,8 +62,8 @@ class ApiProfileController extends Controller
                 $profile->gender = $request->gender;
             }
             $profile->save();
-            return response()->json($profile, 200);
+            return ResponseUtil::handleResponse($profile,ResponseUtil::SUCCESS);
         }
-        return response()->json(['message' => 'Profile not found!'], 404);
+        return ResponseUtil::handleErrorResponse('Profile not found!',ResponseUtil::NOT_FOUND);
     }
 }

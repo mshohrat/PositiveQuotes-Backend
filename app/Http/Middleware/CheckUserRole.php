@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Utils\ResponseUtil;
 use App\Role\RoleChecker;
 use Closure;
 use Illuminate\Http\Response;
@@ -34,12 +35,12 @@ class CheckUserRole
         if ( ! $this->roleChecker->check($user, $role)) {
             if($request -> expectsJson())
             {
-                return  response()->json(['message' => 'action is not allowed for this user!'], 405);
+                return ResponseUtil::handleErrorResponse('Action is not allowed for this user!',ResponseUtil::NOT_ALLOWED);
             }
             else
             {
                 Auth::logout();
-                return redirect() -> route('login') -> withErrors(['authorize'=>'action is not allowed for this user!']);
+                return redirect() -> route('login') -> withErrors(['authorize'=>'Action is not allowed for this user!']);
             }
         }
 

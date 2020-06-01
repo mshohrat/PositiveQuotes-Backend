@@ -23,11 +23,15 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::group([
-    'prefix' => 'v1/auth'
+    'prefix' => 'v1'
 ], function () {
-    Route::post('signup', 'ApiUserController@signup');
-    Route::middleware('token.need')->post('login', 'ApiTokenController@issueToken');
-    Route::middleware('is.guest')->post('login-as-guest', 'ApiTokenController@issueToken');
+    Route::group([
+        'prefix' => 'auth'
+    ],function (){
+        Route::post('signup', 'ApiUserController@signup');
+        Route::middleware('token.need')->post('login', 'ApiTokenController@issueToken');
+        Route::middleware('is.guest')->post('login-as-guest', 'ApiTokenController@issueToken');
+    });
 
     Route::group([
         'middleware' => ['auth:api']
@@ -36,6 +40,7 @@ Route::group([
             'middleware' => ['identify']
         ], function() {
             Route::get('user', 'ApiUserController@user');
+            Route::get('config', 'ApiConfigController@config');
 
             Route::get('profile', 'ApiProfileController@get');
             Route::put('profile', 'ApiProfileController@edit');
@@ -45,4 +50,7 @@ Route::group([
             return "success";
         });
     });
+
 });
+
+

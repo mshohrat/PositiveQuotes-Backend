@@ -3,6 +3,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Utils\ResponseUtil;
 use Closure;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
@@ -12,7 +13,7 @@ class ApiTokenRequirements extends Middleware
     {
         if(!$request->hasHeader('uuid') || $request->header('uuid') == null)
         {
-            return  response()->json(['message' => 'uuid is required!'], 400);
+            return ResponseUtil::handleErrorResponse('UUID is required!',ResponseUtil::BAD_REQUEST);
         }
         if(!$request->has('is_guest'))
         {

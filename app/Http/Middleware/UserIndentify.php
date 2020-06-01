@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Utils\ResponseUtil;
 use App\Role\UserRole;
 use App\User;
 use Closure;
@@ -20,17 +21,17 @@ class UserIndentify
     {
         if(!$request->hasHeader('uuid') || $request->header('uuid') == null)
         {
-            return  response()->json(['message' => 'User is not authenticated!'], 401);
+            return ResponseUtil::handleErrorResponse('User is not authenticated!',ResponseUtil::UNAUTHORIZED);
         }
         if($request->user() == null)
         {
-            return  response()->json(['message' => 'User is not authenticated!'], 401);
+            return ResponseUtil::handleErrorResponse('User is not authenticated!',ResponseUtil::UNAUTHORIZED);
         }
         $uuid = $request->header('uuid');
         $user = $request->user();
         if($user->identifier != $uuid)
         {
-            return  response()->json(['message' => 'User is not authenticated!'], 401);
+            return ResponseUtil::handleErrorResponse('User is not authenticated!',ResponseUtil::UNAUTHORIZED);
         }
         return $next($request);
     }

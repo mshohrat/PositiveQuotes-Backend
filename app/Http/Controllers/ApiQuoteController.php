@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Utils\ResponseUtil;
 use App\Quote;
 use Illuminate\Http\Request;
 
@@ -51,11 +52,9 @@ class ApiQuoteController extends Controller
             $quote->author = $request->author;
             $quote->active = $request->active;
             $quote->save();
-            return response()->json(['message' => 'Successfully updated Quote!'], 200);
+            return ResponseUtil::handleErrorResponse('Successfully updated Quote!',ResponseUtil::SUCCESS);
         }
-        return response()->json([
-            'message' => 'Quote not found!'
-        ], 404);
+        return ResponseUtil::handleErrorResponse('Quote not found!',ResponseUtil::NOT_FOUND);
     }
 
     public function deleteQuote(Request $request)
@@ -78,9 +77,9 @@ class ApiQuoteController extends Controller
         if($quote != null)
         {
             $quote->delete();
-            return response()->json(['message' => 'Successfully Deleted Quote!'], 200);
+            return ResponseUtil::handleErrorResponse('Successfully deleted Quote!',ResponseUtil::SUCCESS);
         }
-        return response()->json(['message' => 'Quote not found!'], 404);
+        return ResponseUtil::handleErrorResponse('Quote not found!',ResponseUtil::NOT_FOUND);
     }
 
     public function activateQuoteByAdminInDB(string $id,string $active) : bool
@@ -99,9 +98,9 @@ class ApiQuoteController extends Controller
     {
         if($this->activateQuoteByAdminInDB($request->route('id'),$request->route('active')))
         {
-            return response()->json(['message' => 'Successfully Updated Quote!'], 200);
+            return ResponseUtil::handleErrorResponse('Successfully updated Quote!',ResponseUtil::SUCCESS);
         }
-        return response()->json(['message' => 'Quote not found!'], 404);
+        return ResponseUtil::handleErrorResponse('Quote not found!',ResponseUtil::NOT_FOUND);
     }
 
     public function makeQuotesActiveByAdmin(Request $request)
@@ -117,9 +116,9 @@ class ApiQuoteController extends Controller
 
         if($done)
         {
-            return response()->json(['message' => 'Successfully Updated Quotes!'], 200);
+            return ResponseUtil::handleErrorResponse('Successfully updated Quote!',ResponseUtil::SUCCESS);
         }
-        return response()->json(['message' => 'Quote not found!'], 404);
+        return ResponseUtil::handleErrorResponse('Quote not found!',ResponseUtil::NOT_FOUND);
     }
 
     public function getQuote()

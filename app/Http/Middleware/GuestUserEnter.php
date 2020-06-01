@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Utils\ResponseUtil;
 use App\Profile;
 use App\User;
 use App\UserSetting;
@@ -27,7 +28,7 @@ class GuestUserEnter
         ]);
         $user = User::where('identifier',$request->uuid)->first();
         if($user != null) {
-            return  response()->json(['message' => 'The method specified in the request is not allowed!'], 405);
+            return ResponseUtil::handleErrorResponse('The method specified in the request is not allowed!',ResponseUtil::NOT_ALLOWED);
         }
         $name = 'Guest'.rand(10000001,99999999);
         $password = Str::random(8);

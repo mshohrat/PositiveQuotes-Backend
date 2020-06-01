@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Utils\ResponseUtil;
 use App\Profile;
 use App\Role\UserRole;
 use App\User;
@@ -20,6 +21,11 @@ class ApiUserController extends Controller
             'password' => 'required|string',
             'uuid' => 'required|string'
         ]);
+        $otherUser = User::where('identifier',$request->uuid)->first();
+        if($otherUser != null)
+        {
+            return ResponseUtil::handleErrorResponse('You need to use different identifier ID!',ResponseUtil::BAD_REQUEST);
+        }
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
@@ -30,9 +36,7 @@ class ApiUserController extends Controller
         $user->setRoles([UserRole::ROLE_CUSTOMER]);
         $user->save();
         $this->createProfileAndSetting($user->email);
-        return response()->json([
-            'message' => 'Successfully created user!'
-        ], 201);
+        return ResponseUtil::handleErrorResponse('Successfully created user!',ResponseUtil::CREATED);
     }
 
     private function createProfileAndSetting(string $email)
