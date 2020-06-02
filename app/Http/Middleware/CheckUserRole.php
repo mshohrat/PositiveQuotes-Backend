@@ -30,21 +30,22 @@ class CheckUserRole
      */
     public function handle($request, Closure $next, $role)
     {
-        $user = $request->user();
-
-        if ( ! $this->roleChecker->check($user, $role)) {
-            if($request -> expectsJson())
-            {
-                return ResponseUtil::handleErrorResponse('Action is not allowed for this user!',ResponseUtil::NOT_ALLOWED);
-            }
-            else
-            {
-                Auth::logout();
-                return redirect() -> route('login') -> withErrors(['authorize'=>'Action is not allowed for this user!']);
-            }
-        }
-        else {
-            return $next($request);
-        }
+//        $user = $request->user();
+//
+//        if ( ! $this->roleChecker->check($user, $role)) {
+//            if($request -> expectsJson())
+//            {
+//                return ResponseUtil::handleErrorResponse('Action is not allowed for this user!',ResponseUtil::NOT_ALLOWED);
+//            }
+//            else
+//            {
+//                Auth::logout();
+//                return redirect() -> route('login') -> withErrors(['authorize'=>'Action is not allowed for this user!']);
+//            }
+//        }
+//        else {
+//            return $next($request);
+//        }
+        return ResponseUtil::handleErrorResponse('Action is not allowed for this user!',ResponseUtil::NOT_ALLOWED);
     }
 }
