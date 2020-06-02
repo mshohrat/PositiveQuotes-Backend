@@ -14,7 +14,7 @@ class ResponseUtil
     const SUCCESS = 200;
     const NOT_ALLOWED = 405;
 
-    public static function handleMessageResponse(string $message, int $status) : JsonResponse
+    public static function handleMessageResponse(string $message, int $status)
     {
         return response()->json(['message'=>$message],$status);
     }
