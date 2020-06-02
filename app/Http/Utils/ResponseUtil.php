@@ -16,7 +16,9 @@ class ResponseUtil
 
     public static function handleMessageResponse(string $message, int $status)
     {
-        return response()->json(['message'=>$message],$status);
+        return new Response(json_encode(['message'=>$message]),$status);
+
+//        return response()->json_decode(['message'=>$message],$status);
     }
 
     public static function handleResponse($data, int $status) : Response
