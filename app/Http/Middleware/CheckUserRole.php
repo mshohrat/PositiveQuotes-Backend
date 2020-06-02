@@ -35,7 +35,7 @@ class CheckUserRole
         if ( ! $this->roleChecker->check($user, $role)) {
             if($request -> expectsJson())
             {
-                return ResponseUtil::handleErrorResponse('Action is not allowed for this user!',ResponseUtil::NOT_ALLOWED);
+                return ResponseUtil::handleMessageResponse('Action is not allowed for this user!',ResponseUtil::NOT_ALLOWED);
             }
             else
             {

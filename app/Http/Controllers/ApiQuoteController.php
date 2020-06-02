@@ -52,9 +52,9 @@ class ApiQuoteController extends Controller
             $quote->author = $request->author;
             $quote->active = $request->active;
             $quote->save();
-            return ResponseUtil::handleErrorResponse('Successfully updated Quote!',ResponseUtil::SUCCESS);
+            return ResponseUtil::handleMessageResponse('Successfully updated Quote!',ResponseUtil::SUCCESS);
         }
-        return ResponseUtil::handleErrorResponse('Quote not found!',ResponseUtil::NOT_FOUND);
+        return ResponseUtil::handleMessageResponse('Quote not found!',ResponseUtil::NOT_FOUND);
     }
 
     public function deleteQuote(Request $request)
@@ -77,9 +77,9 @@ class ApiQuoteController extends Controller
         if($quote != null)
         {
             $quote->delete();
-            return ResponseUtil::handleErrorResponse('Successfully deleted Quote!',ResponseUtil::SUCCESS);
+            return ResponseUtil::handleMessageResponse('Successfully deleted Quote!',ResponseUtil::SUCCESS);
         }
-        return ResponseUtil::handleErrorResponse('Quote not found!',ResponseUtil::NOT_FOUND);
+        return ResponseUtil::handleMessageResponse('Quote not found!',ResponseUtil::NOT_FOUND);
     }
 
     public function activateQuoteByAdminInDB(string $id,string $active) : bool
@@ -98,9 +98,9 @@ class ApiQuoteController extends Controller
     {
         if($this->activateQuoteByAdminInDB($request->route('id'),$request->route('active')))
         {
-            return ResponseUtil::handleErrorResponse('Successfully updated Quote!',ResponseUtil::SUCCESS);
+            return ResponseUtil::handleMessageResponse('Successfully updated Quote!',ResponseUtil::SUCCESS);
         }
-        return ResponseUtil::handleErrorResponse('Quote not found!',ResponseUtil::NOT_FOUND);
+        return ResponseUtil::handleMessageResponse('Quote not found!',ResponseUtil::NOT_FOUND);
     }
 
     public function makeQuotesActiveByAdmin(Request $request)
@@ -116,9 +116,9 @@ class ApiQuoteController extends Controller
 
         if($done)
         {
-            return ResponseUtil::handleErrorResponse('Successfully updated Quote!',ResponseUtil::SUCCESS);
+            return ResponseUtil::handleMessageResponse('Successfully updated Quote!',ResponseUtil::SUCCESS);
         }
-        return ResponseUtil::handleErrorResponse('Quote not found!',ResponseUtil::NOT_FOUND);
+        return ResponseUtil::handleMessageResponse('Quote not found!',ResponseUtil::NOT_FOUND);
     }
 
     public function getQuote()

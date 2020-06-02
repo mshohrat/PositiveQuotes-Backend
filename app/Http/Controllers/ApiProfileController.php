@@ -15,7 +15,7 @@ class ApiProfileController extends Controller
             if ($profile != null) {
                 return ResponseUtil::handleResponse($profile,ResponseUtil::SUCCESS);
             }
-            return ResponseUtil::handleErrorResponse('Profile not found!',ResponseUtil::NOT_FOUND);
+            return ResponseUtil::handleMessageResponse('Profile not found!',ResponseUtil::NOT_FOUND);
         }
         else
         {
@@ -34,12 +34,12 @@ class ApiProfileController extends Controller
         if($request->expectsJson()) {
             if($id == null)
             {
-                return ResponseUtil::handleErrorResponse('User ID is required!',ResponseUtil::BAD_REQUEST);
+                return ResponseUtil::handleMessageResponse('User ID is required!',ResponseUtil::BAD_REQUEST);
             }
             if ($profile != null) {
                 return ResponseUtil::handleResponse($profile,ResponseUtil::SUCCESS);
             }
-            return ResponseUtil::handleErrorResponse('Profile not found!',ResponseUtil::NOT_FOUND);
+            return ResponseUtil::handleMessageResponse('Profile not found!',ResponseUtil::NOT_FOUND);
         }
         else
         {
@@ -64,6 +64,6 @@ class ApiProfileController extends Controller
             $profile->save();
             return ResponseUtil::handleResponse($profile,ResponseUtil::SUCCESS);
         }
-        return ResponseUtil::handleErrorResponse('Profile not found!',ResponseUtil::NOT_FOUND);
+        return ResponseUtil::handleMessageResponse('Profile not found!',ResponseUtil::NOT_FOUND);
     }
 }

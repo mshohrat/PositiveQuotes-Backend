@@ -21,17 +21,17 @@ class UserIndentify
     {
         if(!$request->hasHeader('uuid') || $request->header('uuid') == null)
         {
-            return ResponseUtil::handleErrorResponse('User is not authenticated!',ResponseUtil::UNAUTHORIZED);
+            return ResponseUtil::handleMessageResponse('User is not authenticated!',ResponseUtil::UNAUTHORIZED);
         }
         if($request->user() == null)
         {
-            return ResponseUtil::handleErrorResponse('User is not authenticated!',ResponseUtil::UNAUTHORIZED);
+            return ResponseUtil::handleMessageResponse('User is not authenticated!',ResponseUtil::UNAUTHORIZED);
         }
         $uuid = $request->header('uuid');
         $user = $request->user();
         if($user->identifier != $uuid)
         {
-            return ResponseUtil::handleErrorResponse('User is not authenticated!',ResponseUtil::UNAUTHORIZED);
+            return ResponseUtil::handleMessageResponse('User is not authenticated!',ResponseUtil::UNAUTHORIZED);
         }
         return $next($request);
     }

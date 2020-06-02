@@ -13,7 +13,7 @@ class ApiTokenRequirements extends Middleware
     {
         if(!$request->hasHeader('uuid') || $request->header('uuid') == null)
         {
-            return ResponseUtil::handleErrorResponse('UUID is required!',ResponseUtil::BAD_REQUEST);
+            return ResponseUtil::handleMessageResponse('UUID is required!',ResponseUtil::BAD_REQUEST);
         }
         if(!$request->has('is_guest'))
         {

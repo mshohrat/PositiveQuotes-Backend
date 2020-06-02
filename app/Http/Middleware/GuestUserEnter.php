@@ -28,7 +28,7 @@ class GuestUserEnter
         ]);
         $user = User::where('identifier',$request->uuid)->first();
         if($user != null) {
-            return ResponseUtil::handleErrorResponse('The method specified in the request is not allowed!',ResponseUtil::NOT_ALLOWED);
+            return ResponseUtil::handleMessageResponse('The method specified in the request is not allowed!',ResponseUtil::NOT_ALLOWED);
         }
         $name = 'Guest'.rand(10000001,99999999);
         $password = Str::random(8);

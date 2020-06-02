@@ -2,6 +2,7 @@
 
 namespace App\Http\Utils;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class ResponseUtil
@@ -13,7 +14,7 @@ class ResponseUtil
     const SUCCESS = 200;
     const NOT_ALLOWED = 405;
 
-    public static function handleErrorResponse(string $message, int $status) : Response
+    public static function handleMessageResponse(string $message, int $status) : JsonResponse
     {
         return response()->json(['message'=>$message],$status);
     }
