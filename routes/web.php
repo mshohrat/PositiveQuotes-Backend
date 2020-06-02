@@ -30,7 +30,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => 'auth','check.user.role:'.\App\Role\UserRole::ROLE_ADMIN], function () {
 	Route::resource('user', 'UserController', ['except' => ['show']]);
 	Route::get('user/active-users', ['as' => 'user.active_users', 'uses' => 'UserController@active_users']);
 	Route::get('user/inactive-users', ['as' => 'user.inactive_users', 'uses' => 'UserController@inactive_users']);
