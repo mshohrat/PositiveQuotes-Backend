@@ -28,6 +28,7 @@ class ApiTokenController extends AccessTokenController
                 $data['is_guest'] = $user->is_guest;
                 $data['name'] = $user->name;
                 $data['email'] = $user->email;
+                $data['uuid'] = $request->getHeaderLine('uuid');
                 return ResponseUtil::handleResponse($data,ResponseUtil::SUCCESS);
             }
         }
