@@ -14,14 +14,12 @@ class ResponseUtil
     const SUCCESS = 200;
     const NOT_ALLOWED = 405;
 
-    public static function handleMessageResponse(string $message, int $status)
+    public static function handleMessageResponse(string $message, int $status) : JsonResponse
     {
-        return new Response(json_encode(['message'=>$message]),$status);
-
-//        return response()->json_decode(['message'=>$message],$status);
+        return response()->json(['message'=>$message],$status);
     }
 
-    public static function handleResponse($data, int $status) : Response
+    public static function handleResponse($data, int $status) : JsonResponse
     {
         return response()->json($data,$status);
     }
