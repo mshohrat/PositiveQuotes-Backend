@@ -43,7 +43,8 @@ class CheckUserRole
                 return redirect() -> route('login') -> withErrors(['authorize'=>'Action is not allowed for this user!']);
             }
         }
-
-        return $next($request);
+        else {
+            return $next($request);
+        }
     }
 }

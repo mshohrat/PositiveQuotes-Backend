@@ -79,7 +79,8 @@ class UserController extends Controller
             'password' => Hash::make($request->get('password')),
             'is_active' => $request->has('is_active') ? 1 : 0,
             'identifier' => Str::uuid()->toString(),
-            'roles' => [UserRole::ROLE_CUSTOMER]
+            'roles' => [UserRole::ROLE_CUSTOMER],
+            'is_quest' => 0
         ])->all());
 
         return redirect()->route('user.index')->withStatus(__('User successfully created.'));
