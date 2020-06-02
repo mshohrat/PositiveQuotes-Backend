@@ -34,6 +34,9 @@
                     <img src="{{ asset('assets/img/now-logo.png') }}" alt="">
                 </div>
                 </div>
+                @if($errors->has('authorize'))
+                    @include('alerts.errors')
+                @endif
                 <div class="card-body ">
                 <div class="input-group no-border form-control-lg {{ $errors->has('email') ? ' has-danger' : '' }}">
                     <span class="input-group-prepend">
