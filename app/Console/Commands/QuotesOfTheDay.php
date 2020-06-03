@@ -64,6 +64,16 @@ class QuotesOfTheDay extends Command
                     $option = $optionBuilder->build();
 
                     FCM::sendTo($user->firebase_id, $option, null, $data);
+
+                    $new_sent_quotes = [];
+                    foreach ($quotes as $quote)
+                    {
+                        $new_sent_quotes[] = new SentQuote([
+                            'user_id' => $user->id,
+                            'quote_id' => $quote->id
+                        ]);
+                    }
+                    DB::table('sent_quotes')->insert($new_sent_quotes);
                 }
             }
         }
