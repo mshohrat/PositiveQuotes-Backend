@@ -41,6 +41,7 @@ Route::group([
         ], function() {
             Route::get('user', 'ApiUserController@user');
             Route::get('config', 'ApiConfigController@config');
+            Route::post('fb-token', 'ApiUserController@registerFbToken');
 
             Route::get('profile', 'ApiProfileController@get');
             Route::put('profile', 'ApiProfileController@edit');

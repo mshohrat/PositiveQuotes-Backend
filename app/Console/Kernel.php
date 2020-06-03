@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         //$schedule->command('passport:purge --revoked')->daily();
+        $schedule->command('quotes:day')->dailyAt('12:00');
     }
 
     /**

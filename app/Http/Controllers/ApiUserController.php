@@ -69,4 +69,14 @@ class ApiUserController extends Controller
             return view('auth.login');
         }
     }
+
+    public function registerFbToken(Request $request)
+    {
+        $request->validate([
+            'token' => 'required|string',
+        ]);
+        $user = $request->user();
+        $user->firebase_id = $request->token;
+        return ResponseUtil::handleMessageResponse('Successfully updated firebase token',ResponseUtil::SUCCESS);
+    }
 }
