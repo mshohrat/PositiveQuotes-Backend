@@ -11,10 +11,10 @@ class ApiConfigController extends Controller
     {
         $user = $request->user();
         $requires_token = false;
-        if($user->firebase_id == null)
-        {
-            $requires_token = true;
-        }
+//        if($user->firebase_id == null)
+//        {
+//            $requires_token = true;
+//        }
         return response()->json(['is_user_active'=>$user->is_active,'requires_token'=> $requires_token],200);
     }
 }
