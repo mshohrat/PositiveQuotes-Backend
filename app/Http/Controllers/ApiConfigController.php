@@ -15,6 +15,6 @@ class ApiConfigController extends Controller
 //        {
 //            $requires_token = true;
 //        }
-        return response()->json(['is_user_active'=>$user->is_active,'requires_token'=> '8'],200);
+        return response()->json(['is_user_active'=>$user->is_active],200);
     }
 }
