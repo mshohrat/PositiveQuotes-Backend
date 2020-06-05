@@ -16,6 +16,6 @@ class ApiConfigController extends Controller
 //        {
 //            $requires_token = 'true';
 //        }
-        return ResponseUtil::handleResponse(['is_user_active'=>$request->user()->is_active],ResponseUtil::SUCCESS);
+        return ResponseUtil::handleResponse(['is_user_active'=>$request->user()->is_active,'requires_token' =>$request->user()->firebase_id == null],ResponseUtil::SUCCESS);
     }
 }
