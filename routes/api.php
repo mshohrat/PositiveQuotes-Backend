@@ -46,10 +46,6 @@ Route::group([
             Route::get('profile', 'ApiProfileController@get');
             Route::put('profile', 'ApiProfileController@edit');
         });
-
-        Route::middleware('check.user.role:'.\App\Role\UserRole::ROLE_ADMIN)->get('role', function(){
-            return "success";
-        });
     });
 
 });
