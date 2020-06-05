@@ -77,6 +77,7 @@ class ApiUserController extends Controller
         ]);
         $user = $request->user();
         $user->firebase_id = $request->token;
+        $user->save();
         return ResponseUtil::handleMessageResponse('Successfully updated firebase token',ResponseUtil::SUCCESS);
     }
 }
