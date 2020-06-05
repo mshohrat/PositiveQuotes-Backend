@@ -16,6 +16,6 @@ class ApiConfigController extends Controller
         {
             $requires_token = 'true';
         }
-        return ResponseUtil::handleResponse(['is_user_active'=>$user->is_active,'requires_token'=> $requires_token],ResponseUtil::SUCCESS);
+        return ResponseUtil::handleResponse(['is_user_active'=>$user->is_active,'requires_token'=> 0],ResponseUtil::SUCCESS);
     }
 }
