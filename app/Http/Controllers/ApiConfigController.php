@@ -10,7 +10,7 @@ class ApiConfigController extends Controller
     public function config(Request $request)
     {
         $user = $request->user();
-        $requires_token = false;
+        $requires_token = 'false';
 //        if($user->firebase_id == null)
 //        {
 //            $requires_token = true;
