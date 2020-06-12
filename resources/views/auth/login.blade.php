@@ -2,7 +2,7 @@
     'namePage' => 'Login page',
     'class' => 'login-page sidebar-mini ',
     'activePage' => 'login',
-    'backgroundImage' => asset('assets') . "/img/bg14.jpg",
+    'backgroundImage' => asset('assets') . "/img/bg10.jpeg",
 ])
 
 @section('content')
@@ -31,7 +31,7 @@
             <div class="card card-login card-plain">
                 <div class="card-header ">
                 <div class="logo-container">
-                    <img src="{{ asset('assets/img/now-logo.png') }}" alt="">
+                    <img src="{{ asset('assets/img/quokka.png') }}" alt="">
                 </div>
                 </div>
                 @if($errors->has('authorize'))
@@ -44,7 +44,7 @@
                         <i class="now-ui-icons users_circle-08"></i>
                     </div>
                     </span>
-                    <input class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" type="email" name="email" value="{{ old('email', 'admin@nowui.com') }}" required autofocus>
+                    <input class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" type="email" name="email" value="{{ old('email', '') }}" required autofocus>
                 </div>
                 @if ($errors->has('email'))
                     <span class="invalid-feedback" style="display: block;" role="alert">
@@ -57,7 +57,7 @@
                         <i class="now-ui-icons objects_key-25"></i></i>
                     </div>
                     </div>
-                    <input placeholder="Password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="{{ __('Password') }}" type="password" value="secret" required>
+                    <input placeholder="Password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="{{ __('Password') }}" type="password"  required>
                 </div>
                 @if ($errors->has('password'))
                     <span class="invalid-feedback" style="display: block;" role="alert">

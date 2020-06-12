@@ -12,6 +12,10 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
+              @if ($listName == "All Quotes")
+                  <a class="btn btn-primary btn-round text-white pull-right" href="{{ route('quote.create') }}">{{ __('Add quote') }}</a>
+                  <a class="btn btn-primary btn-round text-white pull-right mr-2" href="{{ route('quote.import') }}">{{ __('Import quotes') }}</a>
+              @endif
             <h4 class="card-title">{{ __($listName) }}</h4>
               <div class="col-12 mt-2">
                   @include('alerts.success')

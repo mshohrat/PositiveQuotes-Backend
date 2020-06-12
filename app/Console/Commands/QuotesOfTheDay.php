@@ -56,7 +56,7 @@ class QuotesOfTheDay extends Command
 
                 if($quotes != null) {
                     $dataBuilder = new PayloadDataBuilder();
-                    $dataBuilder->addData($quotes->toArray());
+                    $dataBuilder->addData(['quotes' => $quotes]);
                     $data = $dataBuilder->build();
 
                     $optionBuilder = new OptionsBuilder();

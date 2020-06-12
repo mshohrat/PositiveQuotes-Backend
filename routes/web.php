@@ -43,6 +43,9 @@ Route::group(['middleware' => 'auth','check.user.role:'.\App\Role\UserRole::ROLE
         Route::get('quote/verified-quotes', ['as' => 'quote.verified_quotes', 'uses' => 'QuoteController@verified_quotes']);
         Route::get('quote/pending-quotes', ['as' => 'quote.pending_quotes', 'uses' => 'QuoteController@pending_quotes']);
         Route::post('quote/store', ['as' => 'quote.store', 'uses' => 'QuoteController@store']);
+        Route::post('quote/seed', ['as' => 'quote.seed', 'uses' => 'QuoteController@seed']);
+        Route::get('quote/create', ['as' => 'quote.create', 'uses' => 'QuoteController@create']);
+        Route::get('quote/import', ['as' => 'quote.import', 'uses' => 'QuoteController@import']);
         Route::put('quote/{quote}/update', ['as' => 'quote.update', 'uses' => 'QuoteController@update']);
         Route::get('quote/{quote}/edit', ['as' => 'quote.edit', 'uses' => 'QuoteController@edit']);
         Route::delete('quote/{quote}/destroy', ['as' => 'quote.destroy', 'uses' => 'QuoteController@destroy']);

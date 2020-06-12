@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\QuoteRequest;
+use App\Imports\ImportQuotes;
 use App\Quote;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class QuoteController extends Controller
 {
@@ -35,6 +37,16 @@ class QuoteController extends Controller
         return redirect()->route('quote.quotes')->withStatus(__('Quote successfully created.'));
     }
 
+    public function seed(Request $request)
+    {
+        $request->validate([
+            'data' => 'required|mimes:csv,txt'
+        ]);
+
+        Excel::import(new ImportQuotes(),$request->file('data'));
+        return back()->with('success','Quotes imported successfully');
+    }
+
     public function update(QuoteRequest $request, Quote $quote)
     {
         $quote->update([
@@ -45,9 +57,19 @@ class QuoteController extends Controller
         return redirect()->route('quote.quotes')->withStatus(__('Quote successfully updated.'));
     }
 
+    public function create()
+    {
+        return view('quotes.create');
+    }
+
     public function edit(Quote $quote)
     {
         return view('quotes.edit', compact('quote'));
+    }
+
+    public function import()
+    {
+        return view('quotes.import');
     }
 
     public function destroy(Quote  $quote)
