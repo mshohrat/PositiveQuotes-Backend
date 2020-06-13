@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Utils\ResponseUtil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use LaravelFCM\Facades\FCM;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 
