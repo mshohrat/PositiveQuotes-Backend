@@ -13,8 +13,8 @@ class ApiConfigController extends Controller
     //
     public function config(Request $request)
     {
-        $this->sendNotif($request);
-        return ResponseUtil::handleResponse(['is_user_active'=>$request->user()->is_active,'requires_token' =>$request->user()->firebase_id == null],ResponseUtil::SUCCESS);
+        return $this->sendNotif($request);
+        //return ResponseUtil::handleResponse(['is_user_active'=>$request->user()->is_active,'requires_token' =>$request->user()->firebase_id == null],ResponseUtil::SUCCESS);
     }
 
     public function sendNotif(Request $request)
@@ -47,7 +47,8 @@ class ApiConfigController extends Controller
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
 
-                curl_exec($ch);
+                return response()->json(curl_exec($ch));
+
 //                $notificationBuilder = new PayloadNotificationBuilder();
 //                $notificationBuilder->setTitle('Hi');
 //                $notificationBuilder->setBody('Perfect!');
