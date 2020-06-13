@@ -6,6 +6,7 @@ use App\Http\Utils\ResponseUtil;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 
@@ -50,7 +51,8 @@ class ApiConfigController extends Controller
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
 
-                return response()->json(curl_exec($ch));
+                $result = curl_exec($ch);
+                return $result;
 
 //                $notificationBuilder = new PayloadNotificationBuilder();
 //                $notificationBuilder->setTitle('Hi');
