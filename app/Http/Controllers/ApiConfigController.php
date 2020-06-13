@@ -19,7 +19,7 @@ class ApiConfigController extends Controller
 
     public function sendNotif(Request $request)
     {
-        $users = DB::table('users')->whereNotNull('firebase_id');
+        $users = DB::table('users')->whereNotNull('firebase_id')->get();
         if($users != null) {
             foreach ($users as $user)
             {
