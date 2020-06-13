@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Utils\ResponseUtil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use FCM;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 
@@ -24,16 +23,41 @@ class ApiConfigController extends Controller
         if($users != null) {
             foreach ($users as $user)
             {
-                $notificationBuilder = new PayloadNotificationBuilder();
-                $notificationBuilder->setTitle('Hi');
-                $notificationBuilder->setBody('Perfect!');
-                $notification = $notificationBuilder->build();
+                $data = [
+                    "to" => $user->firebase_id,
+                    "notification" =>
+                        [
+                            "title" => 'Hi',
+                            "body" => "Test Notification"
+//                            "icon" => url('/logo.png')
+                        ],
+                ];
+                $dataString = json_encode($data);
 
-                $optionBuilder = new OptionsBuilder();
-                $optionBuilder->setTimeToLive(60 * 20);
-                $option = $optionBuilder->build();
+                $headers = [
+                    'Authorization: key=' . env('FCM_SERVER_KEY'),
+                    'Content-Type: application/json',
+                ];
 
-                FCM::sendTo($user->firebase_id, $option, $notification, null);
+                $ch = curl_init();
+
+                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+
+                curl_exec($ch);
+//                $notificationBuilder = new PayloadNotificationBuilder();
+//                $notificationBuilder->setTitle('Hi');
+//                $notificationBuilder->setBody('Perfect!');
+//                $notification = $notificationBuilder->build();
+//
+//                $optionBuilder = new OptionsBuilder();
+//                $optionBuilder->setTimeToLive(60 * 20);
+//                $option = $optionBuilder->build();
+//
+//                FCM::sendTo($user->firebase_id, $option, $notification, null);
             }
         }
     }
