@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Utils\ResponseUtil;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use LaravelFCM\Message\OptionsBuilder;
@@ -23,31 +24,40 @@ class ApiConfigController extends Controller
         if($users != null) {
             foreach ($users as $user)
             {
-                $data = [
-                    "to" => $user->firebase_id,
-                    "notification" =>
-                        [
-                            "title" => 'Hi',
-                            "body" => "Test Notification"
-//                            "icon" => url('/logo.png')
-                        ],
-                ];
-                $dataString = json_encode($data);
+
+                $http = new Client();
 
                 $headers = [
                     'Authorization: key=' . env('FCM_SERVER_KEY'),
                     'Content-Type: application/json',
                 ];
 
-                $ch = curl_init();
+                $data = [
+                    "to" => $user->firebase_id,
+                    "notification" =>
+                        [
+                            'title' => 'Hi',
+                            'body' => 'Test Notification'
+                        ],
+                ];
 
-                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-                curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+                $response = $http->request('POST','',[
+                    'headers' => $headers,
+                    'form-params' => $data
+                ]);
+//                $dataString = json_encode($data);
 
-                return response()->json($user->firebase_id);
+
+
+//                $ch = curl_init();
+//
+//                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+//                curl_setopt($ch, CURLOPT_POST, true);
+//                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+//                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//                curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+
+                return response()->json($response);
 
 //                $notificationBuilder = new PayloadNotificationBuilder();
 //                $notificationBuilder->setTitle('Hi');
