@@ -47,7 +47,7 @@ class ApiConfigController extends Controller
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
 
-                return response()->json(curl_exec($ch));
+                return response()->json($user->firebase_id);
 
 //                $notificationBuilder = new PayloadNotificationBuilder();
 //                $notificationBuilder->setTitle('Hi');
