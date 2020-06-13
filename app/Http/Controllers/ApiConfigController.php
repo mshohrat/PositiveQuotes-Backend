@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Utils\ResponseUtil;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -43,11 +44,21 @@ class ApiConfigController extends Controller
 //                    'Content-Length: ' . strlen($dataString),
                 ];
 
-                $http = new Client();
-                $response = $http->post('https://fcm.googleapis.com/fcm/send',[
-                    'headers' => $headers,
-                    'form-params' => $data
-                ]);
+                try {
+                    $http = new Client();
+                    $response = $http->post('https://fcm.googleapis.com/fcm/send',[
+                        'headers' => $headers,
+                        'form-params' => $data
+                    ]);
+                } catch (ClientException $exception)
+                {
+                    return response()->json([
+                        'headers' => $headers,
+                        'form-params' => $data
+                    ]);
+                }
+
+
 
 //                $ch = curl_init();
 //
