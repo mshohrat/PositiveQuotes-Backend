@@ -35,24 +35,30 @@ class ApiConfigController extends Controller
                         ],
                 ];
 
-                $dataString = json_encode($data);
+                //$dataString = json_encode($data);
 
                 $headers = [
                     'Authorization: key=' . env('FCM_SERVER_KEY'),
-                    'Content-Type: application/json',
-                    'Content-Length: ' . strlen($dataString),
+                    'Content-Type: application/json'
+//                    'Content-Length: ' . strlen($dataString),
                 ];
 
-                $ch = curl_init();
+                $http = new Client();
+                $response = $http->post('https://fcm.googleapis.com/fcm/send',[
+                    'headers' => $headers,
+                    'form-params' => $data
+                ]);
 
-                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-                curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-
-                $result = curl_exec($ch);
-                return $result;
+//                $ch = curl_init();
+//
+//                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+//                curl_setopt($ch, CURLOPT_POST, true);
+//                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+//                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//                curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+//
+//                $result = curl_exec($ch);
+                return response()->json($response);
 
 //                $notificationBuilder = new PayloadNotificationBuilder();
 //                $notificationBuilder->setTitle('Hi');
