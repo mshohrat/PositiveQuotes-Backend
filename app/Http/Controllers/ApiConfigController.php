@@ -38,7 +38,7 @@ class ApiConfigController extends Controller
                 //$dataString = json_encode($data);
 
                 $headers = [
-                    'Authorization: key=' . env('FCM_SERVER_KEY'),
+                    'Authorization: key=AAAAkpnYfto:APA91bFu54tAtMVCVeMJpq2_XhJ6T6vXJRlOamfcYx70bkiBILO58ixJFKILeiuGmeb-6wYTlLlQGi76vBu4iLkAnbcmpns7OZ2AGZYnXD6bX0rY3q8gu6wppk0X79w5n_2j4smJh1Oj',
                     'Content-Type: application/json'
 //                    'Content-Length: ' . strlen($dataString),
                 ];
