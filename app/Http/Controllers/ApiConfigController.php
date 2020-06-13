@@ -25,11 +25,6 @@ class ApiConfigController extends Controller
             foreach ($users as $user)
             {
 
-                $headers = [
-                    'Authorization: key=' . env('FCM_SERVER_KEY'),
-                    'Content-Type: application/json',
-                ];
-
                 $data = [
                     "to" => $user->firebase_id,
                     "notification" =>
@@ -41,7 +36,11 @@ class ApiConfigController extends Controller
 
                 $dataString = json_encode($data);
 
-
+                $headers = [
+                    'Authorization: key=' . env('FCM_SERVER_KEY'),
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($dataString),
+                ];
 
                 $ch = curl_init();
 
