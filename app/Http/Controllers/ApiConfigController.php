@@ -72,7 +72,10 @@ class ApiConfigController extends Controller
 //                curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
 //
 //                $result = curl_exec($ch);
-                return response()->json($response);
+                return response()->json([
+                        'headers' => $headers,
+                        'body' => $dataString
+                    ]);
 
 //                $notificationBuilder = new PayloadNotificationBuilder();
 //                $notificationBuilder->setTitle('Hi');
