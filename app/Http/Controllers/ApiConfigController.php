@@ -55,6 +55,7 @@ class ApiConfigController extends Controller
                     ]);
                 } catch (GuzzleException $exception)
                {
+                   $response = $exception;
 ////                    return response()->json([
 ////                        'headers' => $headers,
 ////                        'body' => $dataString
@@ -73,10 +74,12 @@ class ApiConfigController extends Controller
 //                curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
 //
 //                $result = curl_exec($ch);
-                return response()->json([
-                        'headers' => $headers,
-                        'body' => $dataString
-                    ]);
+//                return response()->json([
+//                        'headers' => $headers,
+//                        'body' => $dataString
+//                    ]);
+
+                return $response;
 
 //                $notificationBuilder = new PayloadNotificationBuilder();
 //                $notificationBuilder->setTitle('Hi');
