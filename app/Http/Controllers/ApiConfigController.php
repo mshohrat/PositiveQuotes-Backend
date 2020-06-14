@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Utils\ResponseUtil;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -46,16 +47,18 @@ class ApiConfigController extends Controller
 
 
                 try {
-                    $http = new Client(['headers' => $headers]);
-                    $response = $http->post('https://fcm.googleapis.com/fcm/send',[
-                        'form-params' => $dataString
-                    ]);
-                } catch (ClientException $exception)
-                {
-                    return response()->json([
+                    $http = new Client();
+                    $response = $http->request('POST','https://fcm.googleapis.com/fcm/send',[
                         'headers' => $headers,
                         'body' => $dataString
                     ]);
+                } catch (GuzzleException $exception)
+                {
+//                    return response()->json([
+//                        'headers' => $headers,
+//                        'body' => $dataString
+//                    ]);
+                    return response()->json($exception);
                 }
 
 
