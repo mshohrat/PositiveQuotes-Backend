@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Hash;
 
 class ApiUserController extends Controller
 {
+
+    const FCM_TOKEN = 'key=AAAAkpnYfto:APA91bFu54tAtMVCVeMJpq2_XhJ6T6vXJRlOamfcYx70bkiBILO58ixJFKILeiuGmeb-6wYTlLlQGi76vBu4iLkAnbcmpns7OZ2AGZYnXD6bX0rY3q8gu6wppk0X79w5n_2j4smJh1Oj';
+
     public function signup(Request $request)
     {
         $request->validate([

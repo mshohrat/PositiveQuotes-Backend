@@ -2,9 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\ApiUserController;
 use App\SentQuote;
 use App\User;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
@@ -55,15 +60,8 @@ class QuotesOfTheDay extends Command
                 $quotes = DB::table('quotes')->whereNotIn('id', $sent_quotes)->inRandomOrder()->limit(10)->get();
 
                 if($quotes != null) {
-                    $dataBuilder = new PayloadDataBuilder();
-                    $dataBuilder->addData(['quotes' => $quotes]);
-                    $data = $dataBuilder->build();
 
-                    $optionBuilder = new OptionsBuilder();
-                    $optionBuilder->setTimeToLive(60 * 20);
-                    $option = $optionBuilder->build();
-
-                    FCM::sendTo($user->firebase_id, $option, null, $data);
+                    $this->sendDataNotification($user->firebase_id, $quotes);
 
                     $new_sent_quotes = [];
                     foreach ($quotes as $quote)
@@ -77,5 +75,31 @@ class QuotesOfTheDay extends Command
                 }
             }
         }
+    }
+
+    private function sendDataNotification(string $token,Collection $quotes)
+    {
+        $data = [
+            "to" => $token,
+            "data" =>
+                [
+                    'quotes' => $quotes,
+                ],
+        ];
+
+        $dataString = json_encode($data);
+
+        $headers = [
+            'Authorization' => ApiUserController::FCM_TOKEN,
+            'Content-Type' =>  'application/json'
+        ];
+
+        try {
+            $http = new Client();
+            $http->request('POST','https://fcm.googleapis.com/fcm/send',[
+                'headers' => $headers,
+                'body' => $dataString
+            ]);
+        } catch (GuzzleException $exception) {}
     }
 }
