@@ -48,7 +48,7 @@ class ApiConfigController extends Controller
                 try {
                     $http = new Client(['headers' => $headers]);
                     $response = $http->post('https://fcm.googleapis.com/fcm/send',[
-                        'body' => $dataString
+                        'form-params' => $dataString
                     ]);
                 } catch (ClientException $exception)
                 {
