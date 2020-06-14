@@ -46,20 +46,20 @@ class ApiConfigController extends Controller
                 ];
 
 
-                try {
+//                try {
                     $http = new Client();
                     $response = $http->request('POST','https://fcm.googleapis.com/fcm/send',[
                         'headers' => $headers,
                         'body' => $dataString
                     ]);
-                } catch (GuzzleException $exception)
-                {
-//                    return response()->json([
-//                        'headers' => $headers,
-//                        'body' => $dataString
-//                    ]);
-                    return response()->json($exception);
-                }
+//                } catch (GuzzleException $exception)
+//                {
+////                    return response()->json([
+////                        'headers' => $headers,
+////                        'body' => $dataString
+////                    ]);
+//                    return response()->json($exception);
+//                }
 
 
 
