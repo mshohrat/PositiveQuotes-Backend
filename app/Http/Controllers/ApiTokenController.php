@@ -21,7 +21,13 @@ class ApiTokenController extends AccessTokenController
             $user = User::where('email',$requestParameters['username'])->first();
             if($user != null) {
                 if(!$user->is_guest) {
-                    $user->identifier = $request->getHeaderLine('uuid');
+                    $identifier = $request->getHeaderLine('uuid');
+                    $oldUser = User::where('identifier',$identifier)->first();
+                    if($oldUser != null)
+                    {
+                        $oldUser->delete();
+                    }
+                    $user->identifier = $identifier;
                     $user->save();
                 }
                 $data = json_decode($response->getContent(),true);
