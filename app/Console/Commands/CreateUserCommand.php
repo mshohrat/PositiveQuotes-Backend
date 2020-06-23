@@ -50,7 +50,7 @@ class CreateUserCommand extends Command
             $roles     = $this->rolesMap;
         } while (!$this->confirm("Create user {$name} <{$email}>?", true));
 
-        $user = new User(['name' => $name, 'email' => $email, 'password' => Hash::make($password),'is_quest' => 0]);
+        $user = new User(['name' => $name, 'email' => $email, 'password' => Hash::make($password),'is_quest' => false]);
         $user->setRoles($roles);
         if($user->save()) {
             $this->info("Created new user \n # id : {$user->id} \n # name : {$user->name} \n # email : {$user->email}");
