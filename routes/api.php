@@ -28,7 +28,7 @@ Route::group([
     Route::group([
         'prefix' => 'auth'
     ],function (){
-        Route::post('signup', 'ApiUserController@signup');
+        //Route::post('signup', 'ApiUserController@signup');
         Route::middleware('token.need')->post('login', 'ApiTokenController@issueToken');
         Route::middleware('is.guest')->post('login-as-guest', 'ApiTokenController@issueToken');
     });
@@ -42,6 +42,7 @@ Route::group([
             Route::get('user', 'ApiUserController@user');
             Route::get('config', 'ApiConfigController@config');
             Route::post('fb-token', 'ApiUserController@registerFbToken');
+            Route::post('signupFromGuest', 'ApiUserController@signupFromGuest');
 
             Route::get('profile', 'ApiProfileController@get');
             Route::put('profile', 'ApiProfileController@edit');

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Http\Utils\ResponseUtil;
 use App\Profile;
+use App\Role\UserRole;
 use App\User;
 use App\UserSetting;
 use Closure;
@@ -39,6 +40,7 @@ class GuestUserEnter
             'identifier' => $request->uuid,
             'is_guest' => true
         ]);
+        $user->setRoles([UserRole::ROLE_CUSTOMER]);
         $user->save();
         $this->createProfileAndSetting($user->email);
         $request['grant_type'] = 'password';

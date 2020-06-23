@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Utils\ResponseUtil;
 use App\Profile;
+use App\Role\UserRole;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class ApiProfileController extends Controller
 {
@@ -62,6 +65,9 @@ class ApiProfileController extends Controller
                 $profile->gender = $request->gender;
             }
             $profile->save();
+            $user = $request->user();
+            $user->name = $request->name;
+            $user->save();
             return ResponseUtil::handleResponse($profile,ResponseUtil::SUCCESS);
         }
         return ResponseUtil::handleMessageResponse('Profile not found!',ResponseUtil::NOT_FOUND);

@@ -83,4 +83,27 @@ class ApiUserController extends Controller
         $user->save();
         return ResponseUtil::handleMessageResponse('Successfully updated firebase token',ResponseUtil::SUCCESS);
     }
+
+    public function signupFromGuest(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string',
+        ]);
+        $user = $request->user();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->is_quest = false;
+        $user->setRoles([UserRole::ROLE_CUSTOMER]);
+        $user->save();
+
+        $profile = Profile::where('user_id',$user->id)->first();
+        $profile->name = $request->name;
+        $profile->email = $request->email;
+        $profile->save();
+
+        return ResponseUtil::handleMessageResponse('Successfully created user!',ResponseUtil::CREATED);
+    }
 }
