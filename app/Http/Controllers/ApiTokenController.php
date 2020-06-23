@@ -25,7 +25,7 @@ class ApiTokenController extends AccessTokenController
                     $oldUser = User::where('identifier',$identifier)->first();
                     if($oldUser != null)
                     {
-                        $oldUser->delete();
+                        $oldUser->forceDelete();
                     }
                     $user->identifier = $identifier;
                     $user->save();
