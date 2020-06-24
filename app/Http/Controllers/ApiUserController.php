@@ -99,6 +99,6 @@ class ApiUserController extends Controller
         $user->setRoles([UserRole::ROLE_CUSTOMER]);
         $user->save();
 
-        return ResponseUtil::handleMessageResponse('Successfully created user!',ResponseUtil::CREATED);
+        return ResponseUtil::handleResponse(['user'=>$user],ResponseUtil::CREATED);
     }
 }
