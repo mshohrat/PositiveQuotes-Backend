@@ -100,8 +100,17 @@ class ApiUserController extends Controller
         $user->save();
 
         $profile = Profile::where('user_id',$user->id)->first();
-        $profile->name = $request->name;
-        $profile->save();
+        if($profile != null)
+        {
+            $profile->forceDelete();
+        }
+
+        $newProfile = new Profile([
+            'name' => $user->name,
+            'email' => $user->email,
+            'user_id' => $user->id,
+        ]);
+        $newProfile->save();
 
         return ResponseUtil::handleMessageResponse('Successfully created user!',ResponseUtil::CREATED);
     }
