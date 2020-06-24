@@ -18,6 +18,7 @@ class CreateProfilesTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('name');
+            $table->foreign('name')->references('name')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('email');
             $table->foreign('email')->references('email')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('gender')->default(\App\Profile::GENDER_UNKNOWN);
