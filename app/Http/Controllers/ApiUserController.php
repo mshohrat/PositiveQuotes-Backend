@@ -89,13 +89,13 @@ class ApiUserController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'password' => 'required|string',
+            'password' => 'required|string|min:8',
         ]);
         $user = $request->user();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $user->is_quest = false;
+        $user->is_guest = false;
         $user->setRoles([UserRole::ROLE_CUSTOMER]);
         $user->save();
 
