@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Utils\ResponseUtil;
 use App\Quote;
+use App\SentQuote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ApiQuoteController extends Controller
 {
@@ -121,9 +123,24 @@ class ApiQuoteController extends Controller
         return ResponseUtil::handleMessageResponse('Quote not found!',ResponseUtil::NOT_FOUND);
     }
 
-    public function getQuote()
+    public function get10RandomQuotes(Request $request)
     {
-
+        $sent_quotes = DB::table('sent_quotes')
+            ->where('user_id', $request->user()->id)
+            ->pluck('quote_id')->chunk(1000);
+        $quotes = DB::table('quotes')->whereNotIn('id', $sent_quotes)->inRandomOrder()->limit(10)->get();
+        if($quotes != null) {
+            $new_sent_quotes = [];
+            foreach ($quotes as $quote)
+            {
+                $new_sent_quotes[] = new SentQuote([
+                    'user_id' => $request->user()->id,
+                    'quote_id' => $quote->id
+                ]);
+            }
+            DB::table('sent_quotes')->insert($new_sent_quotes);
+        }
+        return ResponseUtil::handleResponse(['quotes'=>$quotes],ResponseUtil::SUCCESS);
     }
 
     public function getQuotesByAdmin()

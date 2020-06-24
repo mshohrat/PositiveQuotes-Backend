@@ -42,8 +42,9 @@ Route::group([
             Route::get('user', 'ApiUserController@user');
             Route::get('config', 'ApiConfigController@config');
             Route::post('fb-token', 'ApiUserController@registerFbToken');
-            Route::post('signupFromGuest', 'ApiUserController@signupFromGuest');
-
+            Route::post('signup-from-guest', 'ApiUserController@signupFromGuest');
+            Route::patch('edit-setting', 'ApiSettingController@edit');
+            Route::get('quotes', 'ApiQuoteController@get10RandomQuotes');
             Route::get('profile', 'ApiProfileController@get');
             Route::put('profile', 'ApiProfileController@edit');
         });

@@ -54,9 +54,8 @@ class QuotesOfTheDay extends Command
         if($users != null) {
             foreach ($users as $user) {
                 $sent_quotes = DB::table('sent_quotes')
-                    ->where('sent-quotes.quote_id', 'quotes.id')
-                    ->where('sent-quotes.user_id', $user->id)
-                    ->pluck('id')->all();
+                    ->where('user_id', $user->id)
+                    ->pluck('quote_id')->chunk(1000);
                 $quotes = DB::table('quotes')->whereNotIn('id', $sent_quotes)->inRandomOrder()->limit(10)->get();
 
                 if($quotes != null) {
