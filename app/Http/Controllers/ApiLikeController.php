@@ -16,7 +16,7 @@ class ApiLikeController extends Controller
         $data = [
             'current_page' => $likes->currentPage(),
             'total_pages' => $likes->lastPage(),
-            'data' => $likes->data()
+            'data' => $likes->getCollection()
         ];
         return ResponseUtil::handleResponse($data,ResponseUtil::SUCCESS);
     }
