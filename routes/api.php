@@ -47,6 +47,9 @@ Route::group([
             Route::get('quotes', 'ApiQuoteController@get10RandomQuotes');
             Route::get('profile', 'ApiProfileController@get');
             Route::put('profile', 'ApiProfileController@edit');
+            Route::patch('like/{id}', 'ApiLikeController@like');
+            Route::patch('dislike/{id}', 'ApiLikeController@dislike');
+            Route::get('likes/{page}', 'ApiLikeController@getLikes');
         });
     });
 
