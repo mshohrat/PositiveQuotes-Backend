@@ -128,20 +128,15 @@ class ApiQuoteController extends Controller
         $sent_quotes = DB::table('sent_quotes')
             ->where('user_id', $request->user()->id)
             ->pluck('quote_id')->chunk(1000);
-        if($sent_quotes != null && $sent_quotes->isNotEmpty()) {
-            $quotes = DB::table('quotes')->whereNotIn('id', $sent_quotes)->inRandomOrder()->limit(10)->get();
-        }
-        else {
-            $quotes = DB::table('quotes')->inRandomOrder()->limit(10)->get();
-        }
+        $quotes = DB::table('quotes')->whereNotIn('id', $sent_quotes)->inRandomOrder()->limit(10)->get();
         if($quotes != null) {
             $new_sent_quotes = [];
             foreach ($quotes as $quote)
             {
-                $new_sent_quotes[] = new SentQuote([
+                $new_sent_quotes[] = [
                     'user_id' => $request->user()->id,
                     'quote_id' => $quote->id
-                ]);
+                ];
             }
             DB::table('sent_quotes')->insert($new_sent_quotes);
         }
