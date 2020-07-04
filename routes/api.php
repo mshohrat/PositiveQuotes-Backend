@@ -50,6 +50,7 @@ Route::group([
             Route::patch('like/{id}', 'ApiLikeController@like');
             Route::patch('dislike/{id}', 'ApiLikeController@dislike');
             Route::get('likes/{page}', 'ApiLikeController@getLikes');
+            Route::post('likes/sync', 'ApiLikeController@syncOfflineLikes');
         });
     });
 

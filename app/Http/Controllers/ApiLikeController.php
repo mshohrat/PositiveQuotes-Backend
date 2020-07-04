@@ -6,6 +6,7 @@ use App\Http\Utils\ResponseUtil;
 use App\LikeQuote;
 use App\Quote;
 use Illuminate\Http\Request;
+use Matrix\Exception;
 
 class ApiLikeController extends Controller
 {
@@ -25,7 +26,7 @@ class ApiLikeController extends Controller
         $quoteId = $request->route('id');
         $quote = Quote::find($quoteId)->first();
         if($quote != null) {
-            $oldLike = LikeQuote::where('quote_id',$quote->id)->first();
+            $oldLike = LikeQuote::where('quote_id',$quote->id)->where('user_id',$request->user()->id)->first();
             if($oldLike == null)
             {
                 $newLike = new LikeQuote([
@@ -50,7 +51,7 @@ class ApiLikeController extends Controller
         $quoteId = $request->route('id');
         $quote = Quote::find($quoteId)->first();
         if($quote != null) {
-            $oldLike = LikeQuote::where('quote_id',$quote->id)->first();
+            $oldLike = LikeQuote::where('quote_id',$quote->id)->where('user_id',$request->user()->id)->first();
             if($oldLike == null)
             {
                 return ResponseUtil::handleMessageResponse('The quote is not liked by user',ResponseUtil::BAD_REQUEST);
@@ -65,5 +66,49 @@ class ApiLikeController extends Controller
         {
             return ResponseUtil::handleMessageResponse("The quote not exists",ResponseUtil::NOT_FOUND);
         }
+    }
+
+    public function syncOfflineLikes(Request $request) {
+        $result = array();
+        if($request->has('actions'))
+        {
+            $actions = $request->get('actions');
+            if($actions != null) {
+                foreach ($actions as $action) {
+                    $quote = Quote::find($action->id)->first();
+                    if($quote != null) {
+                        if($action->liked) {
+                            $oldLike = LikeQuote::where('quote_id',$quote->id)->where('user_id',$request->user()->id)->first();
+                            if($oldLike == null) {
+                                $newLike = new LikeQuote([
+                                    'user_id' => $request->user()->id,
+                                    'quote_id' => $quote->id,
+                                ]);
+                                $changed = $newLike->save();
+                                if($changed) {
+                                    $result[] = [
+                                        'id' => $quote->id,
+                                        'liked' => true
+                                    ];
+                                }
+                            }
+                        }
+                        else {
+                            $oldLike = LikeQuote::where('quote_id',$quote->id)->where('user_id',$request->user()->id)->first();
+                            if($oldLike != null) {
+                                $changed = $oldLike->forceDelete();
+                                if($changed) {
+                                    $result[] = [
+                                        'id' => $quote->id,
+                                        'liked' => false
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return ResponseUtil::handleResponse(['actions_synced'=>$result],ResponseUtil::SUCCESS);
     }
 }
