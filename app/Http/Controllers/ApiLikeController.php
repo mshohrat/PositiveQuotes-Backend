@@ -75,9 +75,9 @@ class ApiLikeController extends Controller
             $actions = $request->get('actions');
             if($actions != null) {
                 foreach ($actions as $action) {
-                    $quote = Quote::find($action->id)->first();
+                    $quote = Quote::find($action['id'])->first();
                     if($quote != null) {
-                        if($action->liked) {
+                        if($action['liked'] == true) {
                             $oldLike = LikeQuote::where('quote_id',$quote->id)->where('user_id',$request->user()->id)->first();
                             if($oldLike == null) {
                                 $newLike = new LikeQuote([
