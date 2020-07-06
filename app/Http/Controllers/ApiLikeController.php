@@ -38,7 +38,7 @@ class ApiLikeController extends Controller
             }
             else
             {
-                return ResponseUtil::handleMessageResponse('The quote is already liked by user',ResponseUtil::BAD_REQUEST);
+                return ResponseUtil::handleMessageResponse('The quote is already liked by user',ResponseUtil::SUCCESS);
             }
         }
         else
@@ -54,7 +54,7 @@ class ApiLikeController extends Controller
             $oldLike = LikeQuote::where('quote_id',$quote->id)->where('user_id',$request->user()->id)->first();
             if($oldLike == null)
             {
-                return ResponseUtil::handleMessageResponse('The quote is not liked by user',ResponseUtil::BAD_REQUEST);
+                return ResponseUtil::handleMessageResponse('The quote is not liked by user',ResponseUtil::SUCCESS);
             }
             else
             {
