@@ -5,10 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Utils\ResponseUtil;
 use App\Profile;
 use App\Role\UserRole;
+use App\SentQuote;
 use App\User;
 use App\UserSetting;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class ApiUserController extends Controller
@@ -78,6 +83,19 @@ class ApiUserController extends Controller
         $request->validate([
             'token' => 'required|string',
         ]);
+        $oldUser = User::where('firebase_id',$request->token)->first();
+        if($oldUser != null)
+        {
+            if($oldUser->is_guest)
+            {
+                $oldUser->forceDelete();
+            }
+            else
+            {
+                $oldUser->firebase_id = null;
+                $oldUser->save();
+            }
+        }
         $user = $request->user();
         $user->firebase_id = $request->token;
         $user->save();
@@ -100,5 +118,55 @@ class ApiUserController extends Controller
         $user->save();
 
         return ResponseUtil::handleResponse(['user'=>$user],ResponseUtil::CREATED);
+    }
+
+    public function notify(Request $request)
+    {
+//        $sent_quotes = DB::table('sent_quotes')
+//            ->where('user_id', $request->user()->id)
+//            ->pluck('quote_id')->chunk(1000);
+        //$quotes = DB::table('quotes')->whereNotIn('id', $sent_quotes)->inRandomOrder()->limit(10)->get();
+        $quotes = DB::table('quotes')->inRandomOrder()->limit(10)->get();
+
+        if($quotes != null) {
+
+            $this->sendDataNotification($request->user()->firebase_id, $quotes);
+
+//            $new_sent_quotes = [];
+//            foreach ($quotes as $quote)
+//            {
+//                $new_sent_quotes[] = new SentQuote([
+//                    'user_id' => $request->user()->id,
+//                    'quote_id' => $quote->id
+//                ]);
+//            }
+//            DB::table('sent_quotes')->insert($new_sent_quotes);
+        }
+    }
+
+    private function sendDataNotification(string $token,Collection $quotes)
+    {
+        $data = [
+            "to" => $token,
+            "data" =>
+                [
+                    'quotes' => $quotes,
+                ],
+        ];
+
+        $dataString = json_encode($data);
+
+        $headers = [
+            'Authorization' => ApiUserController::FCM_TOKEN,
+            'Content-Type' =>  'application/json'
+        ];
+
+        try {
+            $http = new Client();
+            $http->request('POST','https://fcm.googleapis.com/fcm/send',[
+                'headers' => $headers,
+                'body' => $dataString
+            ]);
+        } catch (GuzzleException $exception) {}
     }
 }
