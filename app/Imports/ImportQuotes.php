@@ -17,7 +17,8 @@ class ImportQuotes implements ToModel
         return new Quote([
             'text'     => @$row[0],
             'author'    => @$row[1],
-            'active'    => @$row[2]
+            'active'    => @$row[2],
+            'category_id' => @$row[3]
         ]);
     }
 }
