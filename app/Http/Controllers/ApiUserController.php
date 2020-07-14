@@ -130,7 +130,7 @@ class ApiUserController extends Controller
 
         if($quotes != null) {
 
-            $this->sendDataNotification($request->user()->firebase_id, $quotes);
+            return $this->sendDataNotification($request->user()->firebase_id, $quotes);
 
 //            $new_sent_quotes = [];
 //            foreach ($quotes as $quote)
@@ -163,10 +163,12 @@ class ApiUserController extends Controller
 
         try {
             $http = new Client();
-            $http->request('POST','https://fcm.googleapis.com/fcm/send',[
+            return $http->request('POST','https://fcm.googleapis.com/fcm/send',[
                 'headers' => $headers,
                 'body' => $dataString
             ]);
-        } catch (GuzzleException $exception) {}
+        } catch (GuzzleException $exception) {
+            return $exception;
+        }
     }
 }
