@@ -84,7 +84,7 @@ class ApiUserController extends Controller
             'token' => 'required|string',
         ]);
         $oldUser = User::where('firebase_id',$request->token)->first();
-        if($oldUser != null)
+        if($oldUser != null && $oldUser->id != $request->user()->id)
         {
             if($oldUser->is_guest)
             {
@@ -118,57 +118,5 @@ class ApiUserController extends Controller
         $user->save();
 
         return ResponseUtil::handleResponse(['user'=>$user],ResponseUtil::CREATED);
-    }
-
-    public function notify(Request $request)
-    {
-//        $sent_quotes = DB::table('sent_quotes')
-//            ->where('user_id', $request->user()->id)
-//            ->pluck('quote_id')->chunk(1000);
-        //$quotes = DB::table('quotes')->whereNotIn('id', $sent_quotes)->inRandomOrder()->limit(10)->get();
-        $quotes = DB::table('quotes')->inRandomOrder()->limit(10)->get();
-
-        if($quotes != null) {
-
-            return $this->sendDataNotification($request->user()->firebase_id, $quotes);
-
-//            $new_sent_quotes = [];
-//            foreach ($quotes as $quote)
-//            {
-//                $new_sent_quotes[] = new SentQuote([
-//                    'user_id' => $request->user()->id,
-//                    'quote_id' => $quote->id
-//                ]);
-//            }
-//            DB::table('sent_quotes')->insert($new_sent_quotes);
-        }
-    }
-
-    private function sendDataNotification(string $token,Collection $quotes)
-    {
-        $data = [
-            "to" => $token,
-            "data" =>
-                [
-                    'quotes' => $quotes,
-                ],
-        ];
-
-        $dataString = json_encode($data);
-
-        $headers = [
-            'Authorization' => ApiUserController::FCM_TOKEN,
-            'Content-Type' =>  'application/json'
-        ];
-
-        try {
-            $http = new Client();
-            return $http->request('POST','https://fcm.googleapis.com/fcm/send',[
-                'headers' => $headers,
-                'body' => $dataString
-            ]);
-        } catch (GuzzleException $exception) {
-            return $exception;
-        }
     }
 }

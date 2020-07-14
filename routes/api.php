@@ -40,7 +40,6 @@ Route::group([
             'middleware' => ['identify']
         ], function() {
             Route::get('user', 'ApiUserController@user');
-            Route::get('user/notify', 'ApiUserController@notify');
             Route::get('config', 'ApiConfigController@config');
             Route::post('fb-token', 'ApiUserController@registerFbToken');
             Route::post('signup-from-guest', 'ApiUserController@signupFromGuest');
