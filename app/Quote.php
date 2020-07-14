@@ -11,6 +11,6 @@ class Quote extends Model
     ];
 
     protected $hidden = [
-        'active'
+        'active','category_id'
     ];
 }
