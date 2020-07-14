@@ -28,6 +28,8 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
         //$schedule->command('passport:purge --revoked')->daily();
         $schedule->command('quotes:day')->dailyAt('12:00');
+        $schedule->command('backup:clean')->daily()->at('05:00');
+        $schedule->command('backup:run')->daily()->at('06:00');
     }
 
     /**
