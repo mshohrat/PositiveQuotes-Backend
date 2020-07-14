@@ -17,8 +17,6 @@ class CreateQuotesTable extends Migration
             $table->bigIncrements('id');
             $table->string('text');
             $table->string('author')->nullable()->default(null);
-            $table->bigInteger('category_id')->unsigned();
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
             $table->boolean('active')->default(true);
             $table->timestamps();
         });
