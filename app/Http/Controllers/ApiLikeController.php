@@ -14,11 +14,11 @@ class ApiLikeController extends Controller
     public function getLikes(Request $request) {
         $pageNumber = $request->route('page',1);
         $limit = 15;
-        $skipCount = $limit * ($pageNumber - 0);
+        $skipCount = $limit * ($pageNumber - 1);
         return ResponseUtil::handleResponse([
             'data' => LikeQuote::orderBy('created_at', 'asc')->skip($skipCount)->take($limit)->get(),
             'current_page' => $pageNumber,
-            'total_pages' => (LikeQuote::all()->count() / $limit) + 1
+            'total_pages' => ((int)(LikeQuote::all()->count() / $limit)) + 1
         ],ResponseUtil::SUCCESS);
     }
 
