@@ -50,7 +50,7 @@ class QuotesOfTheDay extends Command
     public function handle()
     {
         //
-        $users = DB::table('users')->whereNotNull('firebase_id');
+        $users = DB::table('users')->whereNotNull('firebase_id')->get();
         if($users != null) {
             foreach ($users as $user) {
                 $sent_quotes = DB::table('sent_quotes')
