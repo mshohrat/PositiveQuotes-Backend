@@ -50,29 +50,38 @@ class QuotesOfTheDay extends Command
     public function handle()
     {
         //
-        $users = DB::table('users')->whereNotNull('firebase_id')->get();
-        if($users != null) {
-            foreach ($users as $user) {
-                $sent_quotes = DB::table('sent_quotes')
-                    ->where('user_id', $user->id)
-                    ->pluck('quote_id')->chunk(1000);
-                $quotes = DB::table('quotes')->orWhereNotIn('id', $sent_quotes)->inRandomOrder()->limit(10)->get();
+        DB::table('users')->whereNotNull('firebase_id')->chunk(50, function($users){
+            if($users != null) {
+                foreach ($users as $user) {
+                    $quotes = DB::table('quotes')
+                        ->join('sent_quotes',function ($join,$user) {
+                            $join->on('sent_quotes.user_id','<>',$user->id)->orWhere('sent_quotes.quote_id','<>','quotes.id');
+                        })
+                        ->inRandomOrder()
+                        ->limit(10)
+                        ->get();
 
-                if($quotes != null) {
+                    if($quotes != null) {
 
-                    $this->sendDataNotification($user->firebase_id, $quotes);
+                        $this->sendDataNotification($user->firebase_id, $quotes);
 
-                    foreach ($quotes as $quote)
-                    {
-                        $new_sent_quote = new SentQuote([
-                            'user_id' => $user->id,
-                            'quote_id' => $quote->id
-                        ]);
-                        $new_sent_quote->save();
+                        $new_sent_quotes = [];
+                        foreach ($quotes as $quote)
+                        {
+                            $new_sent_quotes[] = [
+                                'user_id' => $user->id,
+                                'quote_id' => $quote->id
+                            ];
+                            DB::table('sent_quotes')->insert($new_sent_quotes);
+                        }
                     }
                 }
+                return true;
             }
-        }
+            else {
+                return false;
+            }
+        });
     }
 
     private function sendDataNotification(string $token,Collection $quotes)
