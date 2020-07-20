@@ -56,21 +56,20 @@ class QuotesOfTheDay extends Command
                 $sent_quotes = DB::table('sent_quotes')
                     ->where('user_id', $user->id)
                     ->pluck('quote_id')->chunk(1000);
-                $quotes = DB::table('quotes')->whereNotIn('id', $sent_quotes)->inRandomOrder()->limit(10)->get();
+                $quotes = DB::table('quotes')->orWhereNotIn('id', $sent_quotes)->inRandomOrder()->limit(10)->get();
 
                 if($quotes != null) {
 
                     $this->sendDataNotification($user->firebase_id, $quotes);
 
-                    $new_sent_quotes = [];
                     foreach ($quotes as $quote)
                     {
-                        $new_sent_quotes[] = new SentQuote([
+                        $new_sent_quote = new SentQuote([
                             'user_id' => $user->id,
                             'quote_id' => $quote->id
                         ]);
+                        $new_sent_quote->save();
                     }
-                    DB::table('sent_quotes')->insert($new_sent_quotes);
                 }
             }
         }
