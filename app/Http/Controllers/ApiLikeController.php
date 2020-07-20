@@ -12,14 +12,14 @@ class ApiLikeController extends Controller
 {
     //
     public function getLikes(Request $request) {
-        $page = $request->route('page');
-        $likes = LikeQuote::where('user_id',$request->user()->id)->paginate(15);
-        $data = [
-            'current_page' => $likes->currentPage(),
-            'total_pages' => $likes->lastPage(),
-            'data' => $likes->getCollection()
-        ];
-        return ResponseUtil::handleResponse($data,ResponseUtil::SUCCESS);
+//        $page = $request->route('page');
+//        $likes = LikeQuote::where('user_id',$request->user()->id)->paginate(15);
+//        $data = [
+//            'current_page' => $likes->currentPage(),
+//            'total_pages' => $likes->lastPage(),
+//            'data' => $likes->getCollection()
+//        ];
+        return ResponseUtil::handleResponse([],ResponseUtil::SUCCESS);
     }
 
     public function like(Request $request) {
