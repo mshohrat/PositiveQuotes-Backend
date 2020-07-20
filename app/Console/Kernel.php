@@ -2,8 +2,11 @@
 
 namespace App\Console;
 
+use App\Console\Commands\QuotesOfTheDay;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Spatie\Backup\Commands\BackupCommand;
+use Spatie\Backup\Commands\CleanupCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -14,6 +17,9 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
+        QuotesOfTheDay::class,
+        CleanupCommand::class,
+        BackupCommand::class
     ];
 
     /**
