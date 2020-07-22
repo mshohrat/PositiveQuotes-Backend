@@ -49,31 +49,22 @@ class QuotesOfTheDay extends Command
      */
     public function handle()
     {
-        //
-        DB::table('users')->whereNotNull('firebase_id')->chunk(50, function($users){
+        DB::table('users')->whereNotNull('firebase_id')->orderBy('id')->chunk(50, function($users){
             if($users != null) {
                 foreach ($users as $user) {
+                    $ids = $user->sentQuotes()->pluck('id');
+                    if($ids == null) {
+                        $ids = [];
+                    }
                     $quotes = DB::table('quotes')
-                        ->join('sent_quotes',function ($join,$user) {
-                            $join->on('sent_quotes.user_id','<>',$user->id)->orWhere('sent_quotes.quote_id','<>','quotes.id');
-                        })
+                        ->whereNotIn('id',$ids)
                         ->inRandomOrder()
                         ->limit(10)
                         ->get();
 
                     if($quotes != null) {
-
                         $this->sendDataNotification($user->firebase_id, $quotes);
-
-                        $new_sent_quotes = [];
-                        foreach ($quotes as $quote)
-                        {
-                            $new_sent_quotes[] = [
-                                'user_id' => $user->id,
-                                'quote_id' => $quote->id
-                            ];
-                            DB::table('sent_quotes')->insert($new_sent_quotes);
-                        }
+                        $user->sentQuotes()->sync($quotes->pluck('id'));
                     }
                 }
                 return true;

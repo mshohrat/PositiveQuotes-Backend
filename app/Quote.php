@@ -13,4 +13,8 @@ class Quote extends Model
     protected $hidden = [
         'active'
     ];
+
+    public function usersReceived() {
+        return $this->belongsToMany(User::class,'sent_quotes');
+    }
 }
