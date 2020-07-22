@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\ApiUserController;
+use App\Quote;
 use App\User;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -50,16 +51,15 @@ class QuotesOfTheDay extends Command
                     if($ids == null) {
                         $ids = [];
                     }
-                    $quotes = DB::table('quotes')
-                        ->whereNotIn('id',$ids)
+                    $quotes = Quote::whereNotIn('id',$ids)
                         ->inRandomOrder()
                         ->limit(10)
                         ->get();
 
-                    //if($quotes != null) {
+                    if($quotes != null) {
                         $this->sendDataNotification($user->firebase_id, $quotes);
-                        //$user->sentQuotes()->sync($quotes->pluck('id'));
-                    //}
+                        $user->sentQuotes()->sync($quotes->pluck('id')->all());
+                    }
                 }
                 return true;
             }
