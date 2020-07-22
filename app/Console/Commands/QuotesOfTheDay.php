@@ -61,7 +61,7 @@ class QuotesOfTheDay extends Command
 
                     if($quotes != null) {
                         $d = $this->sendDataNotification($user, $quotes);
-                        $this->info("Notif sent \n # : {$d[0]}");
+                        $this->info("Notif sent \n # : {$d}");
                         $user->sentQuotes()->sync($quotes->pluck('id')->all());
                     }
                 }
