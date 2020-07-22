@@ -94,7 +94,7 @@ class QuotesOfTheDay extends Command
                 'body' => $dataString
             ]);
             $data = $response->getBody()->getContents();
-            $json = json_decode($data),true);
+            $json = json_decode($data,true);
             if($json != null) {
                 if($json['results'] != null && is_array($json['results'])) {
                     $results = $json['results'];
