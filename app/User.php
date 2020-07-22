@@ -99,6 +99,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Quote::class,'sent_quotes');
     }
 
+    public function likedQuotes() {
+        return $this->belongsToMany(Quote::class,'like_quotes');
+    }
+
     /**
      * The attributes that are mass assignable.
      *

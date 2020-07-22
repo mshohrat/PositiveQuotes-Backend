@@ -17,4 +17,8 @@ class Quote extends Model
     public function usersReceived() {
         return $this->belongsToMany(User::class,'sent_quotes');
     }
+
+    public function likedUsers() {
+        return $this->belongsToMany(User::class,'like_quotes');
+    }
 }
