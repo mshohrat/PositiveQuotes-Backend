@@ -57,7 +57,7 @@ class QuotesOfTheDay extends Command
                         ->get();
 
                     if($quotes != null) {
-                        $d = $this->sendDataNotification($user->firebase_id, $quotes);
+                        $d = $this->sendDataNotification($user, $quotes);
                         $this->info("Notif sent \n # : {$d->getBody()->getContents()}");
                         $user->sentQuotes()->sync($quotes->pluck('id')->all());
                     }
@@ -70,10 +70,10 @@ class QuotesOfTheDay extends Command
         });
     }
 
-    private function sendDataNotification(string $token,Collection $quotes)
+    private function sendDataNotification(User $user,Collection $quotes)
     {
         $data = [
-            "to" => $token,
+            "to" => $user->firebase_id,
             "data" =>
                 [
                     'quotes' => $quotes,
@@ -89,10 +89,20 @@ class QuotesOfTheDay extends Command
 
         try {
             $http = new Client();
-            return $http->request('POST','https://fcm.googleapis.com/fcm/send',[
+            $response =  $http->request('POST','https://fcm.googleapis.com/fcm/send',[
                 'headers' => $headers,
                 'body' => $dataString
             ]);
+            $json = $response->getBody()->getContents();
+            if($json != null) {
+                if($json->get('results') != null && is_array($json->get('results'))) {
+                    $results = $json->get('results');
+                    if($results[0] == "NotRegistered" || $results[0] == "InvalidRegistration") {
+                        $user->firebase_id = null;
+                    }
+                }
+            }
+            return $response;
         } catch (GuzzleException $exception) {}
     }
 }
