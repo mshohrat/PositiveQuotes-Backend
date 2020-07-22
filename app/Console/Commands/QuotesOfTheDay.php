@@ -57,9 +57,9 @@ class QuotesOfTheDay extends Command
                         ->get();
 
                     if($quotes != null) {
-                        $this->sendDataNotification($user->firebase_id, $quotes);
+                        $d = $this->sendDataNotification($user->firebase_id, $quotes);
+                        $this->info("Notif sent \n # : {$d}");
                         $user->sentQuotes()->sync($quotes->pluck('id')->all());
-                        $this->info("Quotes sent \n # : {$quotes}");
                     }
                 }
                 return true;
@@ -77,7 +77,7 @@ class QuotesOfTheDay extends Command
             "data" =>
                 [
                     'quotes' => $quotes,
-                ],
+                ]
         ];
 
         $dataString = json_encode($data);
@@ -89,7 +89,7 @@ class QuotesOfTheDay extends Command
 
         try {
             $http = new Client();
-            $http->request('POST','https://fcm.googleapis.com/fcm/send',[
+            return $http->request('POST','https://fcm.googleapis.com/fcm/send',[
                 'headers' => $headers,
                 'body' => $dataString
             ]);
