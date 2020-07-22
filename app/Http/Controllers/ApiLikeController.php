@@ -27,7 +27,7 @@ class ApiLikeController extends Controller
         $quoteId = $request->route('id');
         if(Quote::find($quoteId)->first() != null) {
             $likes = $request->user()->likedQuotes();
-            $likeIds = $likes->pluck('quotes.id')->get();
+            $likeIds = $likes->get()->pluck('quotes.id');
             if (in_array($quoteId, $likeIds)) {
                 return ResponseUtil::handleMessageResponse('The quote is already liked by user', ResponseUtil::SUCCESS);
             } else {
@@ -64,7 +64,7 @@ class ApiLikeController extends Controller
         $quoteId = $request->route('id');
         if(Quote::find($quoteId)->first() != null) {
             $likes = $request->user()->likedQuotes();
-            $likeIds = $likes->pluck('quotes.id')->get();
+            $likeIds = $likes->get()->pluck('quotes.id');
             if (in_array($quoteId, $likeIds)) {
                 $likes->detach([$quoteId]);
                 return ResponseUtil::handleMessageResponse("he quote removed from user likes successfully", ResponseUtil::SUCCESS);
@@ -101,7 +101,7 @@ class ApiLikeController extends Controller
             $actions = $request->get('actions');
             if($actions != null) {
                 $likes = $request->user()->likedQuotes();
-                $likeIds = $likes->pluck('quotes.id')->get();
+                $likeIds = $likes->get()->pluck('quotes.id');
                 foreach ($actions as $action) {
                     $quote = Quote::find($action['id'])->first();
                     if($quote != null) {
