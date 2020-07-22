@@ -58,7 +58,7 @@ class QuotesOfTheDay extends Command
 
                     if($quotes != null) {
                         $d = $this->sendDataNotification($user, $quotes);
-                        $this->info("Notif sent \n # : {$d}");
+                        $this->info("Notif sent \n # : {$d[0]} \n # : {$d[1]}");
                         $user->sentQuotes()->sync($quotes->pluck('id')->all());
                     }
                 }
@@ -95,6 +95,7 @@ class QuotesOfTheDay extends Command
             ]);
             $data = $response->getBody()->getContents();
             $json = json_decode($data,true);
+            $results = null;
             if($json != null) {
                 if($json['results'] != null && is_array($json['results'])) {
                     $results = $json['results'];
@@ -103,7 +104,7 @@ class QuotesOfTheDay extends Command
                     }
                 }
             }
-            return $data;
+            return [$data,$results];
         } catch (GuzzleException $exception) {}
     }
 }
