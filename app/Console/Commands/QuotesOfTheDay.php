@@ -104,7 +104,7 @@ class QuotesOfTheDay extends Command
                     }
                 }
             }
-            return [$data,$results];
+            return [$data,$results[0]];
         } catch (GuzzleException $exception) {}
     }
 }
