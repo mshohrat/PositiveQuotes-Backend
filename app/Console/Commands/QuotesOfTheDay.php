@@ -56,10 +56,10 @@ class QuotesOfTheDay extends Command
                         ->limit(10)
                         ->get();
 
-                    if($quotes != null) {
+                    //if($quotes != null) {
                         $this->sendDataNotification($user->firebase_id, $quotes);
-                        $user->sentQuotes()->sync($quotes->pluck('id'));
-                    }
+                        //$user->sentQuotes()->sync($quotes->pluck('id'));
+                    //}
                 }
                 return true;
             }
