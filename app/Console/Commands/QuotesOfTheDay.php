@@ -65,7 +65,7 @@ class QuotesOfTheDay extends Command
                         $user->sentQuotes()->sync($quotes->pluck('id')->all());
                     }
                 }
-                User::find($this->unregisteredUserIds)->update([
+                User::whereIn('id',$this->unregisteredUserIds)->update([
                     'firebase_id' => null
                 ]);
                 return true;
