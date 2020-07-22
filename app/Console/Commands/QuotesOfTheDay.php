@@ -100,7 +100,7 @@ class QuotesOfTheDay extends Command
             if($json != null) {
                 if($json['results'] != null && is_array($json['results'])) {
                     $results = $json['results'];
-                    if($results[0] != null && $results->has('error') && ($results[0]['error'] == "NotRegistered" || $results[0]['error'] == "InvalidRegistration")) {
+                    if($results[0] != null && array_key_exists('error',$results[0]) && ($results[0]['error'] == "NotRegistered" || $results[0]['error'] == "InvalidRegistration")) {
                         $user->firebase_id = null;
                         $user->save();
                     }
