@@ -9,7 +9,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class QuotesOfTheDay extends Command
 {
@@ -60,8 +59,7 @@ class QuotesOfTheDay extends Command
                         ->get();
 
                     if($quotes != null) {
-                        $d = $this->sendDataNotification($user, $quotes);
-                        $this->info("Notif sent \n # : {$d}");
+                        $this->sendDataNotification($user, $quotes);
                         $user->sentQuotes()->sync($quotes->pluck('id')->all());
                     }
                 }
@@ -110,7 +108,6 @@ class QuotesOfTheDay extends Command
                     }
                 }
             }
-            return $data;
         } catch (GuzzleException $exception) {}
     }
 }

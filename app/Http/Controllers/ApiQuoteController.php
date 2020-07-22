@@ -125,20 +125,17 @@ class ApiQuoteController extends Controller
 
     public function get10RandomQuotes(Request $request)
     {
-        $sent_quotes = DB::table('sent_quotes')
-            ->where('user_id', $request->user()->id)
-            ->pluck('quote_id')->chunk(1000);
-        $quotes = DB::table('quotes')->whereNotIn('id', $sent_quotes)->inRandomOrder()->limit(10)->get();
+        $ids = $request->user()->sentQuotes()->pluck('quotes.id')->all();
+        if($ids == null) {
+            $ids = [];
+        }
+        $quotes = Quote::whereNotIn('id',$ids)
+            ->inRandomOrder()
+            ->limit(10)
+            ->get();
+
         if($quotes != null) {
-            $new_sent_quotes = [];
-            foreach ($quotes as $quote)
-            {
-                $new_sent_quotes[] = [
-                    'user_id' => $request->user()->id,
-                    'quote_id' => $quote->id
-                ];
-            }
-            DB::table('sent_quotes')->insert($new_sent_quotes);
+            $request->user()->sentQuotes()->sync($quotes->pluck('id')->all());
         }
         return ResponseUtil::handleResponse(['quotes'=>$quotes],ResponseUtil::SUCCESS);
     }
