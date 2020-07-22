@@ -95,8 +95,8 @@ class QuotesOfTheDay extends Command
             ]);
             $json = json_decode($response->getBody());
             if($json != null) {
-                if($json->get('results') != null && is_array($json->get('results'))) {
-                    $results = $json->get('results');
+                if($json['results'] != null && is_array($json['results'])) {
+                    $results = $json['results'];
                     if($results[0] == "NotRegistered" || $results[0] == "InvalidRegistration") {
                         $user->firebase_id = null;
                     }
