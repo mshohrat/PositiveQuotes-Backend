@@ -3,18 +3,12 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\ApiUserController;
-use App\SentQuote;
 use App\User;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use LaravelFCM\Message\OptionsBuilder;
-use LaravelFCM\Message\PayloadDataBuilder;
-use LaravelFCM\Message\PayloadNotificationBuilder;
-use FCM;
 
 class QuotesOfTheDay extends Command
 {
@@ -49,10 +43,10 @@ class QuotesOfTheDay extends Command
      */
     public function handle()
     {
-        DB::table('users')->whereNotNull('firebase_id')->orderBy('id')->chunk(50, function($users){
+        User::whereNotNull('firebase_id')->orderBy('id')->chunk(50, function($users){
             if($users != null) {
                 foreach ($users as $user) {
-                    $ids = $user->sentQuotes()->pluck('id');
+                    $ids = $user->sentQuotes()->pluck('quotes.id')->all();
                     if($ids == null) {
                         $ids = [];
                     }
