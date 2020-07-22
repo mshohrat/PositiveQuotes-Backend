@@ -59,6 +59,7 @@ class QuotesOfTheDay extends Command
                     if($quotes != null) {
                         $this->sendDataNotification($user->firebase_id, $quotes);
                         $user->sentQuotes()->sync($quotes->pluck('id')->all());
+                        $this->info("Quotes sent \n # : {$quotes}");
                     }
                 }
                 return true;
