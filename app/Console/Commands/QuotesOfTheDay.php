@@ -27,6 +27,8 @@ class QuotesOfTheDay extends Command
      */
     protected $description = 'Send quotes of the day to users';
 
+    private $unregisteredUserIds = null;
+
     /**
      * Create a new command instance.
      *
@@ -46,6 +48,7 @@ class QuotesOfTheDay extends Command
     {
         User::whereNotNull('firebase_id')->orderBy('id')->chunk(50, function($users){
             if($users != null) {
+                $this->unregisteredUserIds = [];
                 foreach ($users as $user) {
                     $ids = $user->sentQuotes()->pluck('quotes.id')->all();
                     if($ids == null) {
@@ -58,11 +61,13 @@ class QuotesOfTheDay extends Command
 
                     if($quotes != null) {
                         $d = $this->sendDataNotification($user, $quotes);
-                        $f = json_encode($d[1]);
-                        $this->info("Notif sent \n # : {$d[0]} \n # : {$f}");
+                        $this->info("Notif sent \n # : {$d[0]}");
                         $user->sentQuotes()->sync($quotes->pluck('id')->all());
                     }
                 }
+                User::find($this->unregisteredUserIds)->all()->update([
+                    'firebase_id' => null
+                ]);
                 return true;
             }
             else {
@@ -101,12 +106,11 @@ class QuotesOfTheDay extends Command
                 if($json['results'] != null && is_array($json['results'])) {
                     $results = $json['results'];
                     if($results[0] != null && array_key_exists('error',$results[0]) && ($results[0]['error'] == "NotRegistered" || $results[0]['error'] == "InvalidRegistration")) {
-                        $user->firebase_id = null;
-                        $user->save();
+                        $this->unregisteredUserIds[] = $user->id;
                     }
                 }
             }
-            return [$data,$results];
+            return $data;
         } catch (GuzzleException $exception) {}
     }
 }
