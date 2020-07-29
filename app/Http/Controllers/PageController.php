@@ -17,4 +17,8 @@ class PageController extends Controller
         }
         return abort(404);
     }
+
+    public function link() {
+        return view('download');
+    }
 }

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'HomeController@index');
+Route::get('/app', 'PageController@link');
 
 Auth::routes();
 

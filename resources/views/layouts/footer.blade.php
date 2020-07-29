@@ -27,9 +27,8 @@
       &copy;
       <script>
         document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
-      </script>, {{__(" Designed by")}}
-      <a href="#" target="_blank">{{__(" MS")}}</a>{{__(" . Coded by")}}
-      <a href="#" target="_blank">{{__(" MS ")}}</a>&
+      </script>, {{__(" Designed and Coded by")}}
+      <a href="#" target="_blank">{{__(" Mesiiiii ")}}</a>&
       <a href="#" target="_blank">{{__(" Masiiiii")}}</a>
     </div>
   </div>
